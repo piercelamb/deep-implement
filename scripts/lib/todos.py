@@ -5,6 +5,15 @@ Generates TodoWrite-compatible items for tracking implementation progress,
 including context items for state persistence and per-section tasks.
 """
 
+# Per-section steps in the implementation loop
+SECTION_STEPS = [
+    ("implement", "Implement {section}", "Implementing {display_name}"),
+    ("review_subagent", "Run code review subagent for {section}", "Running code review for {display_name}"),
+    ("review_interview", "Perform code review interview for {section}", "Performing code review interview for {display_name}"),
+    ("commit", "Commit {section}", "Committing {display_name}"),
+    ("update_docs", "Update {section} documentation", "Updating {display_name} documentation"),
+]
+
 
 def generate_implementation_todos(
     sections: list[str],
@@ -51,28 +60,32 @@ def generate_implementation_todos(
                 "activeForm": active_form
             })
 
-    # Add section implementation todos
+    # Add section implementation todos with expanded steps
     for section in sections:
         # Extract section number and name for display
         # section-01-foundation -> "01: foundation"
         parts = section.replace("section-", "").split("-", 1)
         if len(parts) == 2:
             num, name = parts
-            display_name = f"{num}: {name.replace('-', ' ')}"
+            display_name = f"section {num}: {name.replace('-', ' ')}"
         else:
             display_name = section
 
-        status = "completed" if section in completed else "pending"
-        todos.append({
-            "content": f"Implement {section}",
-            "status": status,
-            "activeForm": f"Implementing section {display_name}"
-        })
+        # All steps for completed sections are completed
+        section_complete = section in completed
+
+        for step_id, content_template, active_template in SECTION_STEPS:
+            todos.append({
+                "content": content_template.format(section=section, display_name=display_name),
+                "status": "completed" if section_complete else "pending",
+                "activeForm": active_template.format(section=section, display_name=display_name)
+            })
 
     # Add finalization todo
+    all_complete = all(s in completed for s in sections) if sections else False
     todos.append({
         "content": "Generate usage.md and output summary",
-        "status": "pending",
+        "status": "completed" if all_complete else "pending",
         "activeForm": "Generating usage documentation"
     })
 

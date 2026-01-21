@@ -1,6 +1,6 @@
 import pytest
 
-from scripts.lib.todos import generate_implementation_todos
+from scripts.lib.todos import generate_implementation_todos, SECTION_STEPS
 
 
 class TestGenerateImplementationTodos:
@@ -18,13 +18,14 @@ class TestGenerateImplementationTodos:
 
         result = generate_implementation_todos(sections, completed, context)
 
-        # Should have context items + section todos
+        # Should have context items + section todos (5 steps per section)
         context_items = [t for t in result if t["status"] == "completed"]
         section_items = [t for t in result if t["status"] == "pending" and "section-" in t["content"]]
 
         assert any("sections_dir" in t["content"] for t in context_items)
         assert any("git_available" in t["content"] for t in context_items)
-        assert len(section_items) == 2
+        # 2 sections × 5 steps = 10 section items
+        assert len(section_items) == 2 * len(SECTION_STEPS)
 
     def test_generate_todos_partial_completion(self):
         """Should mark completed sections appropriately."""
@@ -34,12 +35,15 @@ class TestGenerateImplementationTodos:
 
         result = generate_implementation_todos(sections, completed, context)
 
-        section_todos = [t for t in result if "section-" in t["content"]]
-        section_01 = next(t for t in section_todos if "section-01" in t["content"])
-        section_02 = next(t for t in section_todos if "section-02" in t["content"])
+        # All section-01 steps should be completed
+        section_01_todos = [t for t in result if "section-01" in t["content"]]
+        for todo in section_01_todos:
+            assert todo["status"] == "completed"
 
-        assert section_01["status"] == "completed"
-        assert section_02["status"] == "pending"
+        # All section-02 steps should be pending
+        section_02_todos = [t for t in result if "section-02" in t["content"]]
+        for todo in section_02_todos:
+            assert todo["status"] == "pending"
 
     def test_todo_format(self):
         """Should generate todos with required fields."""
@@ -69,18 +73,23 @@ class TestGenerateImplementationTodos:
         # First items should be context
         assert "sections_dir" in result[0]["content"]
 
-    def test_active_form_present_tense(self):
-        """activeForm should be in present tense."""
+    def test_section_steps_in_order(self):
+        """Section steps should be in the correct order."""
         sections = ["section-01-foundation"]
         completed = []
         context = {}
 
         result = generate_implementation_todos(sections, completed, context)
 
-        for todo in result:
-            if "section-" in todo["content"]:
-                # Section todos should have "Implementing" form
-                assert "Implementing" in todo["activeForm"]
+        section_todos = [t for t in result if "section-01" in t["content"]]
+
+        # Should have all 5 steps in order
+        assert len(section_todos) == 5
+        assert "Implement" in section_todos[0]["content"]
+        assert "code review subagent" in section_todos[1]["content"]
+        assert "code review interview" in section_todos[2]["content"]
+        assert "Commit" in section_todos[3]["content"]
+        assert "documentation" in section_todos[4]["content"]
 
     def test_all_sections_completed(self):
         """Should mark all sections complete when all are done."""
@@ -121,6 +130,17 @@ class TestGenerateImplementationTodos:
         last_todo = result[-1]
         assert "final" in last_todo["content"].lower() or "usage" in last_todo["content"].lower()
 
+    def test_finalization_completed_when_all_done(self):
+        """Finalization should be completed when all sections are done."""
+        sections = ["section-01-foundation", "section-02-models"]
+        completed = ["section-01-foundation", "section-02-models"]
+        context = {}
+
+        result = generate_implementation_todos(sections, completed, context)
+
+        last_todo = result[-1]
+        assert last_todo["status"] == "completed"
+
     def test_empty_sections_list(self):
         """Should handle empty sections list."""
         sections = []
@@ -131,5 +151,17 @@ class TestGenerateImplementationTodos:
 
         # Should still have context items but no section todos
         assert any("sections_dir" in t["content"] for t in result)
-        section_todos = [t for t in result if "Implement section" in t["content"]]
+        section_todos = [t for t in result if "section-" in t["content"]]
         assert len(section_todos) == 0
+
+    def test_steps_per_section_count(self):
+        """Each section should have exactly 5 steps."""
+        sections = ["section-01-foundation", "section-02-models", "section-03-api"]
+        completed = []
+        context = {}
+
+        result = generate_implementation_todos(sections, completed, context)
+
+        for section in sections:
+            section_todos = [t for t in result if section in t["content"]]
+            assert len(section_todos) == 5, f"Expected 5 steps for {section}, got {len(section_todos)}"
