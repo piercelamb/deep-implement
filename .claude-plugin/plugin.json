@@ -1,0 +1,8 @@
+{
+  "name": "deep-implement",
+  "description": "Implement code from /deep-plan sections with review and git workflow",
+  "version": "0.1.0",
+  "author": {
+    "name": "piercelamb"
+  }
+}
