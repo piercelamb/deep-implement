@@ -1,5 +1,7 @@
 import pytest
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 from scripts.checks.setup_implementation_session import (
@@ -8,8 +10,11 @@ from scripts.checks.setup_implementation_session import (
     check_current_branch,
     check_working_tree_status,
     detect_commit_style,
+    detect_section_review_state,
     infer_session_state,
 )
+
+SETUP_SCRIPT = Path(__file__).parent.parent / "scripts" / "checks" / "setup_implementation_session.py"
 
 
 class TestValidateSectionsDir:
@@ -23,6 +28,8 @@ class TestValidateSectionsDir:
         assert result["error"] is None
         assert "section-01-foundation" in result["sections"]
         assert "section-02-models" in result["sections"]
+        assert result["project_config"]["runtime"] == "python-uv"
+        assert result["project_config"]["test_command"] == "uv run pytest"
 
     def test_nonexistent_dir(self, temp_dir):
         """Non-existent directory should return error."""
@@ -51,11 +58,24 @@ class TestValidateSectionsDir:
         assert result["valid"] is False
         assert "index.md" in result["error"].lower()
 
+    def test_missing_project_config_block(self, temp_dir):
+        """index.md without PROJECT_CONFIG should return error."""
+        sections_dir = temp_dir / "sections"
+        sections_dir.mkdir()
+        (sections_dir / "index.md").write_text("# Just a header\nNo config here.")
+
+        result = validate_sections_dir(sections_dir)
+
+        assert result["valid"] is False
+        assert "project_config" in result["error"].lower()
+
     def test_missing_manifest_block(self, temp_dir):
         """index.md without SECTION_MANIFEST should return error."""
         sections_dir = temp_dir / "sections"
         sections_dir.mkdir()
-        (sections_dir / "index.md").write_text("# Just a header\nNo manifest here.")
+        (sections_dir / "index.md").write_text(
+            "<!-- PROJECT_CONFIG\nruntime: python-uv\ntest_command: uv run pytest\nEND_PROJECT_CONFIG -->\n# No manifest here."
+        )
 
         result = validate_sections_dir(sections_dir)
 
@@ -67,7 +87,7 @@ class TestValidateSectionsDir:
         sections_dir = temp_dir / "sections"
         sections_dir.mkdir()
         (sections_dir / "index.md").write_text(
-            "<!-- SECTION_MANIFEST\nsection-01-missing\nEND_MANIFEST -->"
+            "<!-- PROJECT_CONFIG\nruntime: python-uv\ntest_command: uv run pytest\nEND_PROJECT_CONFIG -->\n<!-- SECTION_MANIFEST\nsection-01-missing\nEND_MANIFEST -->"
         )
 
         result = validate_sections_dir(sections_dir)
@@ -80,7 +100,7 @@ class TestValidateSectionsDir:
         sections_dir = temp_dir / "sections"
         sections_dir.mkdir()
         (sections_dir / "index.md").write_text(
-            "<!-- SECTION_MANIFEST\nsection-01-empty\nEND_MANIFEST -->"
+            "<!-- PROJECT_CONFIG\nruntime: python-uv\ntest_command: uv run pytest\nEND_PROJECT_CONFIG -->\n<!-- SECTION_MANIFEST\nsection-01-empty\nEND_MANIFEST -->"
         )
         (sections_dir / "section-01-empty.md").write_text("")
 
@@ -255,9 +275,9 @@ class TestDetectCommitStyle:
 class TestInferSessionState:
     """Tests for session state detection."""
 
-    def test_new_session(self, mock_sections_dir, temp_dir):
+    def test_new_session(self, mock_sections_dir, temp_dir, mock_git_repo):
         """No existing implementation dir should return mode='new'."""
-        result = infer_session_state(mock_sections_dir, temp_dir / "implementation", None)
+        result = infer_session_state(mock_sections_dir, temp_dir / "implementation", mock_git_repo)
 
         assert result["mode"] == "new"
         assert result["completed_sections"] == []
@@ -295,17 +315,255 @@ class TestInferSessionState:
         assert result["resume_from"] == "section-02-models"
         assert "section-01-foundation" in result["completed_sections"]
 
-    def test_all_complete(self, mock_sections_dir, mock_implementation_dir):
+    def test_all_complete(self, mock_sections_dir, mock_implementation_dir, mock_git_repo):
         """All sections complete should return mode='complete'."""
+        import subprocess
+
+        # Create actual commits to use as valid hashes
+        (mock_git_repo / "section1.py").write_text("# section 1")
+        subprocess.run(["git", "add", "."], cwd=mock_git_repo, capture_output=True)
+        subprocess.run(["git", "commit", "-m", "section 1"], cwd=mock_git_repo, capture_output=True)
+        hash1_result = subprocess.run(["git", "rev-parse", "HEAD"], cwd=mock_git_repo, capture_output=True, text=True)
+        hash1 = hash1_result.stdout.strip()
+
+        (mock_git_repo / "section2.py").write_text("# section 2")
+        subprocess.run(["git", "add", "."], cwd=mock_git_repo, capture_output=True)
+        subprocess.run(["git", "commit", "-m", "section 2"], cwd=mock_git_repo, capture_output=True)
+        hash2_result = subprocess.run(["git", "rev-parse", "HEAD"], cwd=mock_git_repo, capture_output=True, text=True)
+        hash2 = hash2_result.stdout.strip()
+
         config = {
             "sections": ["section-01-foundation", "section-02-models"],
             "sections_state": {
-                "section-01-foundation": {"status": "complete", "commit_hash": "abc123"},
-                "section-02-models": {"status": "complete", "commit_hash": "def456"}
+                "section-01-foundation": {"status": "complete", "commit_hash": hash1},
+                "section-02-models": {"status": "complete", "commit_hash": hash2}
             }
         }
         (mock_implementation_dir / "deep_implement_config.json").write_text(json.dumps(config))
 
-        result = infer_session_state(mock_sections_dir, mock_implementation_dir, None)
+        result = infer_session_state(mock_sections_dir, mock_implementation_dir, mock_git_repo)
 
         assert result["mode"] == "complete"
+
+
+class TestDetectSectionReviewState:
+    """Tests for detect_section_review_state function."""
+
+    def test_no_review_files(self, mock_implementation_dir):
+        """Should return implement step when no review files exist."""
+        result = detect_section_review_state(mock_implementation_dir, "section-01-foundation")
+
+        assert result["has_diff"] is False
+        assert result["has_review"] is False
+        assert result["has_interview"] is False
+        assert result["resume_step"] == "implement"
+
+    def test_diff_only(self, mock_implementation_dir):
+        """Should return review step when only diff exists."""
+        code_review_dir = mock_implementation_dir / "code_review"
+        code_review_dir.mkdir()
+        (code_review_dir / "section-01-diff.md").write_text("# Diff content")
+
+        result = detect_section_review_state(mock_implementation_dir, "section-01-foundation")
+
+        assert result["has_diff"] is True
+        assert result["has_review"] is False
+        assert result["has_interview"] is False
+        assert result["resume_step"] == "review"
+
+    def test_diff_and_review(self, mock_implementation_dir):
+        """Should return interview step when diff and review exist."""
+        code_review_dir = mock_implementation_dir / "code_review"
+        code_review_dir.mkdir()
+        (code_review_dir / "section-01-diff.md").write_text("# Diff content")
+        (code_review_dir / "section-01-review.md").write_text("# Review findings")
+
+        result = detect_section_review_state(mock_implementation_dir, "section-01-foundation")
+
+        assert result["has_diff"] is True
+        assert result["has_review"] is True
+        assert result["has_interview"] is False
+        assert result["resume_step"] == "interview"
+
+    def test_interview_exists(self, mock_implementation_dir):
+        """Should return apply_fixes step when interview exists (regardless of content)."""
+        code_review_dir = mock_implementation_dir / "code_review"
+        code_review_dir.mkdir()
+        (code_review_dir / "section-01-diff.md").write_text("# Diff")
+        (code_review_dir / "section-01-review.md").write_text("# Review")
+        # Content doesn't matter - file existence is the checkpoint
+        (code_review_dir / "section-01-interview.md").write_text(
+            "# Interview\n\n## Findings..."
+        )
+
+        result = detect_section_review_state(mock_implementation_dir, "section-01-foundation")
+
+        assert result["has_interview"] is True
+        assert result["resume_step"] == "apply_fixes"
+
+    def test_section_02_files(self, mock_implementation_dir):
+        """Should detect files for section-02 correctly."""
+        code_review_dir = mock_implementation_dir / "code_review"
+        code_review_dir.mkdir()
+        (code_review_dir / "section-02-diff.md").write_text("# Diff")
+        (code_review_dir / "section-02-review.md").write_text("# Review")
+
+        result = detect_section_review_state(mock_implementation_dir, "section-02-models")
+
+        assert result["has_diff"] is True
+        assert result["has_review"] is True
+        assert result["has_interview"] is False
+        assert result["resume_step"] == "interview"
+
+    def test_infer_state_includes_review_state(self, mock_sections_dir, mock_implementation_dir, mock_git_repo):
+        """infer_session_state should include resume_section_state for incomplete section."""
+        # Create config with no completed sections
+        config = {
+            "sections": ["section-01-foundation", "section-02-models"],
+            "sections_state": {}
+        }
+        (mock_implementation_dir / "deep_implement_config.json").write_text(json.dumps(config))
+
+        # Create review files for section-01 (interview exists = apply fixes from beginning)
+        code_review_dir = mock_implementation_dir / "code_review"
+        code_review_dir.mkdir()
+        (code_review_dir / "section-01-diff.md").write_text("# Diff")
+        (code_review_dir / "section-01-review.md").write_text("# Review")
+        (code_review_dir / "section-01-interview.md").write_text("# Interview transcript")
+
+        result = infer_session_state(mock_sections_dir, mock_implementation_dir, mock_git_repo)
+
+        assert result["resume_from"] == "section-01-foundation"
+        assert result["resume_section_state"] is not None
+        assert result["resume_section_state"]["resume_step"] == "apply_fixes"
+        assert result["resume_section_state"]["has_interview"] is True
+
+
+class TestSessionIdHandling:
+    """Tests for --session-id argument and diagnostic output."""
+
+    def _run_setup_script(
+        self,
+        sections_dir: Path,
+        target_dir: Path,
+        plugin_root: Path,
+        session_id: str | None = None,
+        env_session_id: str | None = None,
+    ) -> dict:
+        """Run setup script and return parsed JSON output."""
+        import os
+
+        cmd = [
+            sys.executable,
+            str(SETUP_SCRIPT),
+            "--sections-dir", str(sections_dir),
+            "--target-dir", str(target_dir),
+            "--plugin-root", str(plugin_root),
+        ]
+        if session_id:
+            cmd.extend(["--session-id", session_id])
+
+        env = os.environ.copy()
+        # Clear any existing session vars
+        env.pop("CLAUDE_SESSION_ID", None)
+        env.pop("CLAUDE_CODE_TASK_LIST_ID", None)
+        if env_session_id:
+            env["CLAUDE_SESSION_ID"] = env_session_id
+
+        result = subprocess.run(cmd, capture_output=True, text=True, env=env)
+        return json.loads(result.stdout)
+
+    def test_session_id_from_arg_takes_precedence(
+        self, mock_sections_dir, mock_git_repo
+    ):
+        """--session-id should take precedence over env var."""
+        plugin_root = Path(__file__).parent.parent
+
+        output = self._run_setup_script(
+            sections_dir=mock_sections_dir,
+            target_dir=mock_git_repo,
+            plugin_root=plugin_root,
+            session_id="context-session-123",
+            env_session_id="env-session-456",
+        )
+
+        assert output["success"] is True
+        assert output["session_id"] == "context-session-123"
+        assert output["session_id_source"] == "context"
+        assert output["session_id_matched"] is False
+
+    def test_session_id_from_env_when_no_arg(
+        self, mock_sections_dir, mock_git_repo
+    ):
+        """Should use env var when --session-id not provided."""
+        plugin_root = Path(__file__).parent.parent
+
+        output = self._run_setup_script(
+            sections_dir=mock_sections_dir,
+            target_dir=mock_git_repo,
+            plugin_root=plugin_root,
+            session_id=None,
+            env_session_id="env-session-789",
+        )
+
+        assert output["success"] is True
+        assert output["session_id"] == "env-session-789"
+        assert output["session_id_source"] == "env"
+        assert output["session_id_matched"] is None  # Only one source
+
+    def test_session_id_matched_true_when_same(
+        self, mock_sections_dir, mock_git_repo
+    ):
+        """session_id_matched should be True when both sources have same value."""
+        plugin_root = Path(__file__).parent.parent
+
+        output = self._run_setup_script(
+            sections_dir=mock_sections_dir,
+            target_dir=mock_git_repo,
+            plugin_root=plugin_root,
+            session_id="same-session-id",
+            env_session_id="same-session-id",
+        )
+
+        assert output["success"] is True
+        assert output["session_id"] == "same-session-id"
+        assert output["session_id_source"] == "context"
+        assert output["session_id_matched"] is True
+
+    def test_session_id_none_when_neither_provided(
+        self, mock_sections_dir, mock_git_repo
+    ):
+        """Should report source='none' when no session ID available."""
+        plugin_root = Path(__file__).parent.parent
+
+        output = self._run_setup_script(
+            sections_dir=mock_sections_dir,
+            target_dir=mock_git_repo,
+            plugin_root=plugin_root,
+            session_id=None,
+            env_session_id=None,
+        )
+
+        assert output["success"] is True
+        assert output["session_id"] is None
+        assert output["session_id_source"] == "none"
+        assert output["session_id_matched"] is None
+        assert output["task_write_error"] is not None  # Should report error
+
+    def test_tasks_written_with_context_session_id(
+        self, mock_sections_dir, mock_git_repo, tmp_path
+    ):
+        """Tasks should be written when --session-id provided."""
+        plugin_root = Path(__file__).parent.parent
+
+        output = self._run_setup_script(
+            sections_dir=mock_sections_dir,
+            target_dir=mock_git_repo,
+            plugin_root=plugin_root,
+            session_id="task-test-session",
+            env_session_id=None,
+        )
+
+        assert output["success"] is True
+        assert output["tasks_written"] > 0
+        assert output["task_write_error"] is None

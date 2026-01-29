@@ -1,6 +1,6 @@
 # Section Documentation Update
 
-After successful commit, update the section file to reflect actual implementation.
+**Before committing**, update the section file to reflect actual implementation.
 
 ## Purpose
 
@@ -8,9 +8,9 @@ Section files start as implementation plans. After implementation, they should b
 
 ## When to Update
 
-Update the section file after:
-1. Successful `git commit` of the implementation
-2. Before updating session state to "complete"
+Update the section file:
+1. After implementation + code review + interview fixes are complete
+2. **Before** the commit
 
 ## What to Update
 
@@ -65,12 +65,24 @@ Update test information if it differs:
 2. **Compare** planned vs actual implementation
 3. **Update in place** - modify the existing content, don't append
 4. **Keep it concise** - this is documentation, not a changelog
-5. **Commit the update** separately:
+5. **Stage if in repo** (see below)
 
+### Staging the Doc Update
+
+The sections directory may or may not be inside the target git repo:
+
+**If `sections_dir` is inside `git_root`:**
 ```bash
 git add {sections_dir}/section-NN-<name>.md
-git commit -m "docs: update section-NN docs to match implementation"
 ```
+The doc update will be included in the section commit.
+
+**If `sections_dir` is outside `git_root`:**
+- Just update the file (no staging needed)
+- The doc update lives with the planning files, separate from the implementation commit
+- This is fine - the section file still serves as documentation
+
+To check: compare `sections_dir` path against `git_root` path.
 
 ## What NOT to Update
 

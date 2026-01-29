@@ -1,0 +1,20 @@
+ultrathink
+  okay so read in @ai_services/scripts/experiments/control_detection/files/experiments/template_policies/parsed_policies/Asset_Management_P
+  olicy/responses/DCF-12.json and @ai_services/scripts/experiments/control_detection/files/experiments/template_policies/parsed_policies/As
+  set_Management_Policy/Asset_Management_Policy_reasons.md
+
+  Now read in the prompt: @ai_services/scripts/experiments/control_detection/control_mapping_reasons/prompts/control_reasons
+
+  Here is what the plan is:
+
+  - Use flash to generate "reasons" why a control maps to a policy for _all_ ground truth controls.
+  - This will result in this .md files where all the "reasons" are captured in the .md file
+  - We will then run a different LLM prompt that compares two "reasons" file and tries to find commonalities/generalities between the two
+  reasons files.
+  - We'll run this mapreduce style where we compare doc 1 and 2, doc 2 and 3, doc 3 and 4 etc. Then we'll compare the next stage and next
+  stage etc until we have one set of "reasons" generalities.
+  - The ultimate goal is to end up with a distilled set of instructions/teaching for the LLM on what it means for a control to map to or be
+  detected inside a pdf document
+  - This teaching/instructions will go in our prompt that actually maps controls to policies.
+
+  Understanding what our goal is, deeply read in the control_reasons prompt and think about how we might want to modify it

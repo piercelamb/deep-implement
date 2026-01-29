@@ -1,0 +1,79 @@
+{
+  "experiment_id": "experiment_1",
+  "date": "2025-12-23",
+  "description": "Baseline LLM control detection on template_policies",
+  "dataset": {
+    "experiment_name": "template_policies",
+    "documents_evaluated": 37,
+    "ground_truth_controls_total": 734,
+    "ground_truth_controls_filtered": 686,
+    "invalid_controls_removed": 48
+  },
+  "hyperparameters": {
+    "embedding": {
+      "model": "colmodernvbert",
+      "scoring_mode": "control_coverage",
+      "score_threshold": 0.48,
+      "max_controls_per_llm_call": 50
+    },
+    "llm": {
+      "model": "gemini-3-flash-preview",
+      "vertex_location": "global",
+      "gcp_project": "ai-team-gemini-dev",
+      "temperature": 0.1,
+      "trigger_threshold": 0.48,
+      "candidate_threshold": 0.48,
+      "max_candidates": 50,
+      "max_concurrent": 10
+    },
+    "neighbor_inclusion": {
+      "enabled": true,
+      "threshold_ratio": 0.5,
+      "max_total_pages": 5
+    }
+  },
+  "results": {
+    "retrieval_stage": {
+      "counts": {
+        "ground_truth": 686,
+        "gt_above_threshold": 654,
+        "gt_in_topk": 528,
+        "gt_lost_at_threshold": 32,
+        "gt_lost_at_topk": 126
+      },
+      "micro_averaged": {
+        "embedding_recall": 0.953,
+        "topk_recall": 0.770
+      },
+      "macro_averaged": {
+        "embedding_recall": 0.932,
+        "topk_recall": 0.779
+      }
+    },
+    "llm_stage": {
+      "counts": {
+        "ground_truth": 686,
+        "predicted": 560,
+        "true_positives": 235,
+        "false_positives": 325,
+        "false_negatives": 451
+      },
+      "micro_averaged": {
+        "precision": 0.420,
+        "recall": 0.343,
+        "f1": 0.377
+      },
+      "macro_averaged": {
+        "precision": 0.400,
+        "recall": 0.379,
+        "f1": 0.322
+      },
+      "adjusted_for_retrieval_ceiling": {
+        "recall_vs_candidates_sent": 0.445,
+        "gt_lost_before_llm": 158,
+        "gt_lost_by_llm": 293
+      }
+    }
+  },
+  "command": "uv run python -m ai_services.scripts.experiments.control_detection.run_experiment --experiment template_policies --use-llm"
+}

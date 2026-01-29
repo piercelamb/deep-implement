@@ -1,0 +1,11 @@
+{
+  "validation_timestamp": "20251227_145838",
+  "experiment_timestamp": "20251227_145838",
+  "config": {
+    "gcp_project": "ai-team-gemini-dev",
+    "vertex_location": "global",
+    "model_name": "gemini-3-pro-preview",
+    "max_concurrent_judges": 5,
+    "save_outputs": true
+  }
+}

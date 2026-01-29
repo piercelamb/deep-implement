@@ -1,0 +1,74 @@
+{
+  "experiment_id": "experiment_2",
+  "date": "2025-12-23",
+  "description": "LLM control detection with increased top-K limit (100)",
+  "dataset": {
+    "experiment_name": "template_policies",
+    "documents_evaluated": 35,
+    "ground_truth_controls_total": 512,
+    "ground_truth_controls_filtered": 512
+  },
+  "hyperparameters": {
+    "embedding": {
+      "model": "colmodernvbert",
+      "scoring_mode": "control_coverage",
+      "score_threshold": 0.48,
+      "max_controls_per_llm_call": 100
+    },
+    "llm": {
+      "model": "gemini-3-flash-preview",
+      "vertex_location": "global",
+      "gcp_project": "ai-team-gemini-dev",
+      "temperature": 0.1,
+      "trigger_threshold": 0.48,
+      "candidate_threshold": 0.48,
+      "max_candidates": 100,
+      "max_concurrent": 10
+    },
+    "neighbor_inclusion": {
+      "enabled": true,
+      "threshold_ratio": 0.5,
+      "max_total_pages": 5
+    }
+  },
+  "results": {
+    "retrieval_stage": {
+      "counts": {
+        "ground_truth": 512,
+        "gt_above_threshold": 480,
+        "gt_in_topk": 418,
+        "gt_lost_at_threshold": 32,
+        "gt_lost_at_topk": 62
+      },
+      "micro_averaged": {
+        "embedding_recall": 0.938,
+        "topk_recall": 0.816
+      }
+    },
+    "llm_stage": {
+      "counts": {
+        "ground_truth": 512,
+        "predicted": 429,
+        "true_positives": 156,
+        "false_positives": 273,
+        "false_negatives": 356
+      },
+      "micro_averaged": {
+        "precision": 0.364,
+        "recall": 0.305,
+        "f1": 0.332
+      },
+      "macro_averaged": {
+        "precision": 0.403,
+        "recall": 0.374,
+        "f1": 0.317
+      },
+      "adjusted_for_retrieval_ceiling": {
+        "recall_vs_candidates_sent": 0.373,
+        "gt_lost_before_llm": 94,
+        "gt_lost_by_llm": 262
+      }
+    }
+  },
+  "command": "uv run python -m ai_services.scripts.experiments.control_detection.run_experiment --experiment template_policies --use-llm"
+}

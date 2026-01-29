@@ -7,7 +7,7 @@ Per-section implementation workflow for /deep-implement.
 For each section in the manifest:
 
 ```
-1. Mark section in progress (TodoWrite)
+1. Mark section in progress (TaskUpdate)
 2. Read section file
 3. Create skeleton files
 4. Write tests (TDD red phase)
@@ -21,9 +21,9 @@ For each section in the manifest:
 
 ### 1. Mark In Progress
 
-Update the section TODO to `in_progress`:
+Update the section task to `in_progress`:
 ```
-TodoWrite: Update section TODO status to "in_progress"
+TaskUpdate(taskId=X, status="in_progress")
 ```
 
 ### 2. Read Section File

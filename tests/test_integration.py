@@ -14,7 +14,7 @@ from pathlib import Path
 class TestFullSetupFlow:
     """Integration tests for complete setup flow."""
 
-    def test_new_session_setup(self, mock_sections_dir, temp_dir):
+    def test_new_session_setup(self, mock_sections_dir, temp_dir, mock_git_repo):
         """Full setup for a new session should succeed."""
         # Create minimal plugin structure
         plugin_root = temp_dir / "plugin"
@@ -24,9 +24,8 @@ class TestFullSetupFlow:
         lib_dir = plugin_root / "scripts" / "lib"
         lib_dir.mkdir(parents=True)
 
-        # Copy actual implementation files
-        # Note: In real test, this would use installed package
-        # For now, we test the script directly
+        # Target directory must be a git repo
+        target_dir = mock_git_repo
 
         # This test assumes the setup script is properly installed
         # Skip if not available
@@ -38,6 +37,7 @@ class TestFullSetupFlow:
             [
                 "uv", "run", str(setup_script),
                 "--sections-dir", str(mock_sections_dir),
+                "--target-dir", str(target_dir),
                 "--plugin-root", str(plugin_root)
             ],
             capture_output=True,
@@ -54,19 +54,26 @@ class TestFullSetupFlow:
         assert output["success"] is True
         assert output["mode"] == "new"
         assert len(output["sections"]) == 2
-        assert len(output["todos"]) > 0
+        # Tasks may or may not be written depending on CLAUDE_SESSION_ID
+        assert "tasks_written" in output
+        # Resolve both paths to handle macOS /var -> /private/var symlink
+        assert Path(output["target_dir"]).resolve() == target_dir.resolve()
+        assert output["git_root"] is not None
 
-        # Verify config was created
-        impl_dir = mock_sections_dir.parent / "implementation"
-        assert (impl_dir / "deep_implement_config.json").exists()
+        # Verify config was created in state_dir
+        state_dir = mock_sections_dir.parent / "implementation"
+        assert (state_dir / "deep_implement_config.json").exists()
 
-    def test_setup_creates_implementation_dir(self, mock_sections_dir, temp_dir):
-        """Setup should create implementation directory if missing."""
+    def test_setup_creates_state_dir(self, mock_sections_dir, temp_dir, mock_git_repo):
+        """Setup should create state directory if missing."""
         plugin_root = temp_dir / "plugin"
         plugin_root.mkdir()
 
-        impl_dir = mock_sections_dir.parent / "implementation"
-        assert not impl_dir.exists()
+        # Target directory must be a git repo
+        target_dir = mock_git_repo
+
+        state_dir = mock_sections_dir.parent / "implementation"
+        assert not state_dir.exists()
 
         setup_script = Path(__file__).parent.parent / "scripts" / "checks" / "setup_implementation_session.py"
         if not setup_script.exists():
@@ -76,6 +83,7 @@ class TestFullSetupFlow:
             [
                 "uv", "run", str(setup_script),
                 "--sections-dir", str(mock_sections_dir),
+                "--target-dir", str(target_dir),
                 "--plugin-root", str(plugin_root)
             ],
             capture_output=True,
@@ -83,8 +91,41 @@ class TestFullSetupFlow:
             cwd=Path(__file__).parent.parent
         )
 
-        assert impl_dir.exists()
-        assert (impl_dir / "deep_implement_config.json").exists()
+        assert state_dir.exists()
+        assert (state_dir / "deep_implement_config.json").exists()
+
+    def test_setup_fails_without_git(self, mock_sections_dir, temp_dir):
+        """Setup should fail if target directory is not a git repo."""
+        plugin_root = temp_dir / "plugin"
+        plugin_root.mkdir()
+
+        # Target directory is NOT a git repo
+        target_dir = temp_dir / "target"
+        target_dir.mkdir()
+
+        setup_script = Path(__file__).parent.parent / "scripts" / "checks" / "setup_implementation_session.py"
+        if not setup_script.exists():
+            pytest.skip("Setup script not found")
+
+        result = subprocess.run(
+            [
+                "uv", "run", str(setup_script),
+                "--sections-dir", str(mock_sections_dir),
+                "--target-dir", str(target_dir),
+                "--plugin-root", str(plugin_root)
+            ],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent
+        )
+
+        try:
+            output = json.loads(result.stdout)
+        except json.JSONDecodeError:
+            pytest.fail(f"Invalid JSON output: {result.stdout}\nstderr: {result.stderr}")
+
+        assert output["success"] is False
+        assert "git" in output["error"].lower()
 
 
 class TestResumeFlow:
@@ -95,9 +136,9 @@ class TestResumeFlow:
         plugin_root = temp_dir / "plugin"
         plugin_root.mkdir()
 
-        # Create implementation dir with partial progress
-        impl_dir = mock_sections_dir.parent / "implementation"
-        impl_dir.mkdir()
+        # Create state dir with partial progress
+        state_dir = mock_sections_dir.parent / "implementation"
+        state_dir.mkdir()
 
         # Create a real commit to reference
         (mock_git_repo / "test_file.py").write_text("# test")
@@ -115,8 +156,8 @@ class TestResumeFlow:
         config = {
             "plugin_root": str(plugin_root),
             "sections_dir": str(mock_sections_dir),
-            "implementation_dir": str(impl_dir),
-            "git_available": True,
+            "target_dir": str(mock_git_repo),
+            "state_dir": str(state_dir),
             "git_root": str(mock_git_repo),
             "commit_style": "simple",
             "test_command": "uv run pytest",
@@ -130,7 +171,7 @@ class TestResumeFlow:
             },
             "created_at": "2025-01-14T10:00:00Z"
         }
-        (impl_dir / "deep_implement_config.json").write_text(json.dumps(config))
+        (state_dir / "deep_implement_config.json").write_text(json.dumps(config))
 
         setup_script = Path(__file__).parent.parent / "scripts" / "checks" / "setup_implementation_session.py"
         if not setup_script.exists():
@@ -144,6 +185,7 @@ class TestResumeFlow:
             [
                 "uv", "run", str(setup_script),
                 "--sections-dir", str(sections_in_repo),
+                "--target-dir", str(mock_git_repo),
                 "--plugin-root", str(plugin_root)
             ],
             capture_output=True,
@@ -158,40 +200,52 @@ class TestResumeFlow:
 
         # Should detect partial completion
         assert output["success"] is True
-        # Mode depends on whether we verify commit hash
-        assert output["git_available"] is True
+        assert output["git_root"] is not None
 
-    def test_all_sections_complete(self, mock_sections_dir, temp_dir):
+    def test_all_sections_complete(self, mock_sections_dir, temp_dir, mock_git_repo):
         """Setup with all sections complete should report complete mode."""
         plugin_root = temp_dir / "plugin"
         plugin_root.mkdir()
 
-        impl_dir = mock_sections_dir.parent / "implementation"
-        impl_dir.mkdir()
+        # Create two commits to reference
+        (mock_git_repo / "file1.py").write_text("# section 1")
+        subprocess.run(["git", "add", "."], cwd=mock_git_repo, capture_output=True)
+        subprocess.run(["git", "commit", "-m", "section 1"], cwd=mock_git_repo, capture_output=True)
+        hash1_result = subprocess.run(["git", "rev-parse", "HEAD"], cwd=mock_git_repo, capture_output=True, text=True)
+        hash1 = hash1_result.stdout.strip()
 
-        # Create config with all sections complete
+        (mock_git_repo / "file2.py").write_text("# section 2")
+        subprocess.run(["git", "add", "."], cwd=mock_git_repo, capture_output=True)
+        subprocess.run(["git", "commit", "-m", "section 2"], cwd=mock_git_repo, capture_output=True)
+        hash2_result = subprocess.run(["git", "rev-parse", "HEAD"], cwd=mock_git_repo, capture_output=True, text=True)
+        hash2 = hash2_result.stdout.strip()
+
+        state_dir = mock_sections_dir.parent / "implementation"
+        state_dir.mkdir()
+
+        # Create config with all sections complete (with valid commit hashes)
         config = {
             "plugin_root": str(plugin_root),
             "sections_dir": str(mock_sections_dir),
-            "implementation_dir": str(impl_dir),
-            "git_available": False,
-            "git_root": None,
-            "commit_style": "unknown",
+            "target_dir": str(mock_git_repo),
+            "state_dir": str(state_dir),
+            "git_root": str(mock_git_repo),
+            "commit_style": "simple",
             "test_command": "uv run pytest",
             "sections": ["section-01-foundation", "section-02-models"],
             "sections_state": {
                 "section-01-foundation": {
                     "status": "complete",
-                    "commit_hash": "abc123"
+                    "commit_hash": hash1
                 },
                 "section-02-models": {
                     "status": "complete",
-                    "commit_hash": "def456"
+                    "commit_hash": hash2
                 }
             },
             "created_at": "2025-01-14T10:00:00Z"
         }
-        (impl_dir / "deep_implement_config.json").write_text(json.dumps(config))
+        (state_dir / "deep_implement_config.json").write_text(json.dumps(config))
 
         setup_script = Path(__file__).parent.parent / "scripts" / "checks" / "setup_implementation_session.py"
         if not setup_script.exists():
@@ -201,6 +255,7 @@ class TestResumeFlow:
             [
                 "uv", "run", str(setup_script),
                 "--sections-dir", str(mock_sections_dir),
+                "--target-dir", str(mock_git_repo),
                 "--plugin-root", str(plugin_root)
             ],
             capture_output=True,
@@ -217,41 +272,6 @@ class TestResumeFlow:
         assert output["mode"] == "complete"
 
 
-class TestNoGitFlow:
-    """Integration tests for no-git mode."""
-
-    def test_setup_without_git(self, mock_sections_dir, temp_dir):
-        """Setup should work in directory without git."""
-        plugin_root = temp_dir / "plugin"
-        plugin_root.mkdir()
-
-        setup_script = Path(__file__).parent.parent / "scripts" / "checks" / "setup_implementation_session.py"
-        if not setup_script.exists():
-            pytest.skip("Setup script not found")
-
-        # mock_sections_dir is not in a git repo (temp_dir has no .git)
-        result = subprocess.run(
-            [
-                "uv", "run", str(setup_script),
-                "--sections-dir", str(mock_sections_dir),
-                "--plugin-root", str(plugin_root)
-            ],
-            capture_output=True,
-            text=True,
-            cwd=Path(__file__).parent.parent
-        )
-
-        try:
-            output = json.loads(result.stdout)
-        except json.JSONDecodeError:
-            pytest.fail(f"Invalid JSON: {result.stdout}")
-
-        assert output["success"] is True
-        assert output["git_available"] is False
-        assert output["git_root"] is None
-        assert output["working_tree_clean"] is True  # Default when no git
-
-
 class TestPreCommitIntegration:
     """Integration tests for pre-commit hook handling."""
 
@@ -265,7 +285,12 @@ class TestPreCommitIntegration:
         sections_dir.mkdir()
 
         # Create valid sections structure
-        index_content = """<!-- SECTION_MANIFEST
+        index_content = """<!-- PROJECT_CONFIG
+runtime: python-uv
+test_command: uv run pytest
+END_PROJECT_CONFIG -->
+
+<!-- SECTION_MANIFEST
 section-01-test
 END_MANIFEST -->
 
@@ -295,6 +320,7 @@ END_MANIFEST -->
             [
                 "uv", "run", str(setup_script),
                 "--sections-dir", str(sections_dir),
+                "--target-dir", str(mock_git_repo),
                 "--plugin-root", str(plugin_root)
             ],
             capture_output=True,
@@ -322,7 +348,12 @@ END_MANIFEST -->
         sections_dir = mock_git_repo / "sections"
         sections_dir.mkdir()
 
-        index_content = """<!-- SECTION_MANIFEST
+        index_content = """<!-- PROJECT_CONFIG
+runtime: python-uv
+test_command: uv run pytest
+END_PROJECT_CONFIG -->
+
+<!-- SECTION_MANIFEST
 section-01-test
 END_MANIFEST -->
 """
@@ -344,6 +375,7 @@ END_MANIFEST -->
             [
                 "uv", "run", str(setup_script),
                 "--sections-dir", str(sections_dir),
+                "--target-dir", str(mock_git_repo),
                 "--plugin-root", str(plugin_root)
             ],
             capture_output=True,
@@ -364,10 +396,13 @@ END_MANIFEST -->
 class TestConfigPersistence:
     """Integration tests for config persistence across resume."""
 
-    def test_config_persists_across_invocations(self, mock_sections_dir, temp_dir):
+    def test_config_persists_across_invocations(self, mock_sections_dir, temp_dir, mock_git_repo):
         """Session config should persist and be readable across invocations."""
         plugin_root = temp_dir / "plugin"
         plugin_root.mkdir()
+
+        # Target directory must be a git repo
+        target_dir = mock_git_repo
 
         setup_script = Path(__file__).parent.parent / "scripts" / "checks" / "setup_implementation_session.py"
         if not setup_script.exists():
@@ -378,6 +413,7 @@ class TestConfigPersistence:
             [
                 "uv", "run", str(setup_script),
                 "--sections-dir", str(mock_sections_dir),
+                "--target-dir", str(target_dir),
                 "--plugin-root", str(plugin_root)
             ],
             capture_output=True,
@@ -390,15 +426,22 @@ class TestConfigPersistence:
         assert output1["mode"] == "new"
 
         # Verify config file exists
-        impl_dir = mock_sections_dir.parent / "implementation"
-        config_path = impl_dir / "deep_implement_config.json"
+        state_dir = mock_sections_dir.parent / "implementation"
+        config_path = state_dir / "deep_implement_config.json"
         assert config_path.exists()
 
-        # Read and modify config (simulate section completion)
+        # Create a real commit to use for section completion
+        (target_dir / "section1.py").write_text("# section 1")
+        subprocess.run(["git", "add", "."], cwd=target_dir, capture_output=True)
+        subprocess.run(["git", "commit", "-m", "section 1"], cwd=target_dir, capture_output=True)
+        hash_result = subprocess.run(["git", "rev-parse", "HEAD"], cwd=target_dir, capture_output=True, text=True)
+        commit_hash = hash_result.stdout.strip()
+
+        # Read and modify config (simulate section completion with valid commit hash)
         config = json.loads(config_path.read_text())
         config["sections_state"]["section-01-foundation"] = {
             "status": "complete",
-            "commit_hash": "test123"
+            "commit_hash": commit_hash
         }
         config_path.write_text(json.dumps(config))
 
@@ -407,6 +450,7 @@ class TestConfigPersistence:
             [
                 "uv", "run", str(setup_script),
                 "--sections-dir", str(mock_sections_dir),
+                "--target-dir", str(target_dir),
                 "--plugin-root", str(plugin_root)
             ],
             capture_output=True,
@@ -416,17 +460,23 @@ class TestConfigPersistence:
 
         output2 = json.loads(result2.stdout)
         assert output2["success"] is True
-        # Without git to verify hash, still shows resume
-        assert output2["mode"] in ["resume", "new"]
+        # With valid git commit hash, should show resume
+        assert output2["mode"] == "resume"
 
 
-class TestTodoGeneration:
-    """Integration tests for TODO generation."""
+class TestTaskGeneration:
+    """Integration tests for task generation."""
 
-    def test_todos_include_context_items(self, mock_sections_dir, temp_dir):
-        """Generated TODOs should include context items for persistence."""
+    def test_setup_returns_task_info(self, mock_sections_dir, temp_dir, mock_git_repo, monkeypatch):
+        """Setup should return task-related fields in output."""
         plugin_root = temp_dir / "plugin"
         plugin_root.mkdir()
+
+        # Target directory must be a git repo
+        target_dir = mock_git_repo
+
+        # Set a session ID so tasks get written
+        monkeypatch.setenv("CLAUDE_SESSION_ID", "test-session-123")
 
         setup_script = Path(__file__).parent.parent / "scripts" / "checks" / "setup_implementation_session.py"
         if not setup_script.exists():
@@ -436,44 +486,62 @@ class TestTodoGeneration:
             [
                 "uv", "run", str(setup_script),
                 "--sections-dir", str(mock_sections_dir),
+                "--target-dir", str(target_dir),
                 "--plugin-root", str(plugin_root)
             ],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent
+            cwd=Path(__file__).parent.parent,
+            env={**subprocess.os.environ, "CLAUDE_SESSION_ID": "test-session-123"}
         )
 
         output = json.loads(result.stdout)
-        todos = output["todos"]
 
-        # Should have context items
-        context_todos = [t for t in todos if t["status"] == "completed"]
-        assert len(context_todos) > 0
-        assert any("sections_dir" in t["content"] for t in context_todos)
+        # Should have task-related fields
+        assert "tasks_written" in output
+        assert "session_id" in output
+        assert output["session_id"] == "test-session-123"
+        assert output["session_id_source"] == "env"
+        # With 2 sections, 6 context items, 12 section tasks (6 per section), 1 finalization = 19 tasks
+        assert output["tasks_written"] > 0
 
-    def test_todos_include_all_sections(self, mock_sections_dir, temp_dir):
-        """Generated TODOs should include item for each section."""
+    def test_setup_without_session_id(self, mock_sections_dir, temp_dir, mock_git_repo, monkeypatch):
+        """Setup without session ID should report 0 tasks written."""
         plugin_root = temp_dir / "plugin"
         plugin_root.mkdir()
+
+        # Target directory must be a git repo
+        target_dir = mock_git_repo
+
+        # Ensure no session ID is set
+        monkeypatch.delenv("CLAUDE_SESSION_ID", raising=False)
+        monkeypatch.delenv("CLAUDE_CODE_TASK_LIST_ID", raising=False)
 
         setup_script = Path(__file__).parent.parent / "scripts" / "checks" / "setup_implementation_session.py"
         if not setup_script.exists():
             pytest.skip("Setup script not found")
 
+        # Create clean environment without session variables
+        clean_env = {k: v for k, v in subprocess.os.environ.items()
+                     if k not in ("CLAUDE_SESSION_ID", "CLAUDE_CODE_TASK_LIST_ID")}
+
         result = subprocess.run(
             [
                 "uv", "run", str(setup_script),
                 "--sections-dir", str(mock_sections_dir),
+                "--target-dir", str(target_dir),
                 "--plugin-root", str(plugin_root)
             ],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent
+            cwd=Path(__file__).parent.parent,
+            env=clean_env
         )
 
         output = json.loads(result.stdout)
-        todos = output["todos"]
 
-        # Should have pending todos for each section
-        section_todos = [t for t in todos if "section" in t["content"].lower() and "implement" in t["content"].lower()]
-        assert len(section_todos) == 2  # mock_sections_dir has 2 sections
+        # Should still succeed but report 0 tasks written
+        assert output["success"] is True
+        assert output["tasks_written"] == 0
+        assert output["session_id"] is None
+        assert output["session_id_source"] == "none"

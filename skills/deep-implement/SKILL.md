@@ -1,3 +1,10 @@
+---
+name: deep-implement
+description: Implements code from /deep-plan section files with TDD methodology, code review, and git workflow. Use when implementing plans created by /deep-plan.
+license: MIT
+compatibility: Requires uv (Python 3.11+), git repository recommended
+---
+
 # Deep Implementation Skill
 
 Implements code from /deep-plan section files with integrated review and git workflow.
@@ -6,9 +13,11 @@ Implements code from /deep-plan section files with integrated review and git wor
 
 **BEFORE using any other tools**, do these in order:
 
-### 1. Print Intro Banner
+### A. Print Intro Banner
 
 ```
+⚠️  CONTEXT WARNING: This workflow is token-intensive. Consider compacting first.
+
 ═══════════════════════════════════════════════════════════════
 DEEP-IMPLEMENT: Section-by-Section Implementation
 ═══════════════════════════════════════════════════════════════
@@ -18,10 +27,12 @@ Implements /deep-plan sections with:
   - Git commits with review trails
 
 Usage: /deep-implement @path/to/sections/.
+
+Note: deep-implement creates a large TODO list. Expand your window to avoid flickering
 ═══════════════════════════════════════════════════════════════
 ```
 
-### 2. Validate Input
+### B. Validate Input
 
 Check if user provided @directory argument ending with a path to a `sections/.` directory.
 
@@ -42,35 +53,78 @@ The sections directory must contain:
 ```
 **Stop and wait for user to re-invoke with correct path.**
 
-### 3. Run Setup Script
+### C. Discover Plugin Root
 
-Find and run the setup script:
+Find the setup script to discover the plugin root:
 ```bash
-uv run {plugin_root}/scripts/checks/setup_implementation_session.py \
-  --sections-dir "{sections_dir}" \
-  --plugin-root "{plugin_root}"
+find "$(pwd)" -path "*/deep_implement/scripts/checks/setup_implementation_session.py" -type f 2>/dev/null | head -1
 ```
+
+If not found in current directory, search from home:
+```bash
+find ~ -path "*/deep_implement/scripts/checks/setup_implementation_session.py" -type f 2>/dev/null | head -1
+```
+
+**Store the script path.** The plugin_root is the directory two levels up from `scripts/checks/`.
+
+### D. Determine Target Directory
+
+The target directory is where implementation code will be written. Check if a previous session exists with a saved target:
+
+```bash
+# Check for existing config
+cat "{sections_dir}/../implementation/deep_implement_config.json" 2>/dev/null | grep -o '"target_dir": "[^"]*"'
+```
+
+**If config exists with target_dir:** Use that value (skip the prompt).
+
+**If no config or no target_dir:** Get current working directory and ask user:
+
+```bash
+pwd
+```
+
+```
+AskUserQuestion:
+  question: "Where should implementation code be written?"
+  options:
+    - label: "{cwd}"
+      description: "Current working directory (Recommended)"
+    - label: "Specify path"
+      description: "Enter a different absolute path"
+```
+
+If user selects "Specify path", they will type the absolute path.
+
+**Store target_dir** for use in setup script.
+
+### E. Run Setup Script
+
+**First, check for session_id in your context.** Look for `DEEP_IMPLEMENT_SESSION_ID=xxx`
+which was set by the SessionStart hook. This appears in your context as additional context.
+
+Run the setup script with discovered paths:
+```bash
+uv run {script_path} \
+  --sections-dir "{sections_dir}" \
+  --target-dir "{target_dir}" \
+  --plugin-root "{plugin_root}" \
+  --session-id "{DEEP_IMPLEMENT_SESSION_ID}"
+```
+
+If `DEEP_IMPLEMENT_SESSION_ID` is not in your context, omit `--session-id`
+(setup will fall back to `CLAUDE_SESSION_ID` env var).
 
 Parse the JSON output.
 
 **If `success == false`:** Display error and stop.
 
-### 4. Handle Git Status
+**Session ID diagnostics in output:**
+- `session_id`: The session ID being used for tasks
+- `session_id_source`: Where it came from ("context", "env", or "none")
+- `session_id_matched`: If both context and env were present, whether they matched (useful for debugging)
 
-If `git_available == false`:
-```
-AskUserQuestion:
-  question: "No git repository detected. Git operations will be skipped. Continue?"
-  options:
-    - label: "Continue without git"
-      description: "Code review will use file contents instead of diffs"
-    - label: "Exit to initialize git"
-      description: "Stop to run git init first"
-```
-
-If user chooses "Exit", stop the workflow.
-
-### 5. Handle Branch Check
+### F. Handle Branch Check
 
 If `is_protected_branch == true` (setup script detects main, master, release/* branches):
 ```
@@ -85,7 +139,7 @@ AskUserQuestion:
 
 If user chooses "Exit", stop the workflow.
 
-### 6. Handle Working Tree Status
+### G. Handle Working Tree Status
 
 If `working_tree_clean == false`:
 ```
@@ -98,42 +152,55 @@ AskUserQuestion:
       description: "Stop to handle uncommitted changes"
 ```
 
-### 7. Print Preflight Report
+### H. Print Preflight Report
 
 ```
 ═══════════════════════════════════════════════════════════════
 PREFLIGHT REPORT
 ═══════════════════════════════════════════════════════════════
-Repo root:      {git_root or "No git"}
-Branch:         {current_branch or "N/A"}
+Target dir:     {target_dir}
+Repo root:      {git_root}
+Branch:         {current_branch}
 Working tree:   {Clean | Dirty (N files)}
 Pre-commit:     {Detected (type) | None}
                 {May modify files: Yes (formatters) | No | Unknown}
 Test command:   {test_command}
 Sections:       {N} detected
 Completed:      {M} already done
-State storage:  {implementation_dir}
+State storage:  {state_dir}
 ═══════════════════════════════════════════════════════════════
 ```
 
-### 8. Create TODO List
+### I. Verify Task List
 
-Pass the `todos` array from setup output to TodoWrite.
+Check the setup output for task status:
 
-**Understanding the TODO list:**
+1. If `tasks_written > 0`: Tasks have been written. Call `TaskList` to see them.
+2. If `task_write_error` is present: Task write failed - log the error and continue with manual tracking.
+3. If no `task_list_id`: Session ID not available - the SessionStart hook may not have run.
 
-The TODO list contains **5 high-level reminders per section**:
+**After setup succeeds:** Call `TaskList` to see the implementation tasks.
+
+**Understanding the task list:**
+
+The task list contains **6 high-level reminders per section**:
 1. Implement section-NN
 2. Run code review subagent for section-NN
 3. Perform code review interview for section-NN
-4. Commit section-NN
-5. Update section-NN documentation
+4. Update section-NN documentation
+5. Commit section-NN
+6. Record section-NN completion
+
+Plus a **compaction prompt every 2nd section** (after 02, 04, 06, etc.).
+
+Context items appear as pending tasks at the start (e.g., `plugin_root=/path/...`, `sections_dir=/path/...`).
 
 These are **milestones to track progress**, not detailed instructions. For the actual workflow steps, always refer to:
 - This file (SKILL.md) for the overall orchestration
 - The reference documents in `references/` for detailed protocols
 
-Mark each TODO as `in_progress` when starting that phase, and `completed` when done.
+Mark each task as `in_progress` when starting: `TaskUpdate(taskId=X, status="in_progress")`
+Mark each task as `completed` when done: `TaskUpdate(taskId=X, status="completed")`
 
 ---
 
@@ -141,18 +208,22 @@ Mark each TODO as `in_progress` when starting that phase, and `completed` when d
 
 For each incomplete section (in manifest order):
 
-**TODO milestone mapping:**
-| TODO Item | Workflow Steps |
+**Task milestone mapping:**
+| Task Subject | Workflow Steps |
 |-----------|----------------|
 | Implement section-NN | Steps 1-5 (read, TDD, stage) |
-| Run code review subagent | Step 6, parts 1-4 |
-| Perform code review interview | Step 6, parts 5-7 |
-| Commit section-NN | Step 7 |
-| Update section-NN documentation | Step 8 |
+| Run code review subagent | Step 6 (launch subagent, write review) |
+| Perform code review interview | Steps 7-8 (triage, interview, apply fixes) |
+| Update section-NN documentation | Step 9 (update section file with what was actually built) |
+| Commit section-NN | Step 10 (commit implementation + doc update together) |
+| Record section-NN completion | Step 11 (run update_section_state.py to save commit hash) |
+| Context check (every 2nd section only) | Step 13 (context management options) |
+
+**Note:** Step 12 (Mark Complete) is internal task status update. Step 14 (Loop) continues to next section. Context checks only appear after sections 02, 04, 06, etc.
 
 ### Step 1: Mark In Progress
 
-Update TODO: `status: "in_progress"`
+Update task: `TaskUpdate(taskId=X, status="in_progress")`
 
 ### Step 2: Read Section File
 
@@ -186,21 +257,71 @@ git add {created_files...}
 git add -u
 ```
 
-### Step 6: Code Review
+### Step 6: Code Review (Subagent)
 
 See [code-review-protocol.md](references/code-review-protocol.md)
 
-1. Create `{implementation_dir}/code_review/` directory if it doesn't exist
+1. Create `{state_dir}/code_review/` directory if it doesn't exist
 2. Write staged diff to `{code_review_dir}/section-NN-diff.md`
 3. Launch `code-reviewer` subagent to analyze the diff
-4. Write subagent's findings to `{code_review_dir}/section-NN-review.md`
-5. Read review and present findings via AskUserQuestion (multiSelect)
-6. Apply selected fixes
-7. Re-stage if needed
+4. Write subagent's review to `{code_review_dir}/section-NN-review.md`
 
-### Step 7: Commit
+### Step 7: Code Review Triage and Interview
+
+See [code-review-interview.md](references/code-review-interview.md)
+
+Triage the review findings and interview the user only on important items:
+
+1. Read the review and use judgment to categorize:
+   - **Ask user:** Decisions with real tradeoffs, security concerns
+   - **Auto-fix:** Obvious improvements, low-risk changes
+   - **Let go:** Nitpicks, pedantic observations
+2. Interview user only on items that need their input
+3. Write transcript with both interview decisions AND auto-fixes to `{code_review_dir}/section-NN-interview.md`
+
+The goal is a useful conversation, not a comprehensive audit.
+
+### Step 8: Apply Fixes
+
+See [apply-interview-fixes.md](references/apply-interview-fixes.md)
+
+Apply all fixes recorded in the transcript:
+
+1. Read `{code_review_dir}/section-NN-interview.md`
+2. Apply user-approved fixes and auto-fixes (if already applied, skip)
+3. Run tests to verify nothing broke
+4. Re-stage modified files
+
+**Recovery:** If compaction happens, the interview file is the checkpoint. Restart applying fixes from the beginning - you'll notice already-applied changes. The commit is the definitive checkpoint.
+
+### Step 9: Update Section Documentation
+
+See [section-doc-update.md](references/section-doc-update.md)
+
+**Before committing**, update the original section file to reflect what was actually implemented:
+
+1. Read `{sections_dir}/section-NN-<name>.md`
+2. Compare planned implementation vs actual:
+   - Code review fixes that changed the approach
+   - File paths that differed from plan
+   - Tests that were added/modified
+3. Update the section file with:
+   - Actual file paths created/modified
+   - Any deviations from original plan (with rationale)
+   - Final test count and coverage notes
+4. **If sections_dir is inside git_root**, stage the section doc:
+   ```bash
+   git add {sections_dir}/section-NN-<name>.md
+   ```
+   (If sections_dir is outside git_root, skip staging - the doc update lives with the planning files)
+
+This keeps section files as accurate documentation of what was built, not just what was planned.
+
+### Step 10: Commit
 
 See [git-operations.md](references/git-operations.md) and [pre-commit-handling.md](references/pre-commit-handling.md)
+
+Commit implementation + doc update together (one commit per section):
 
 1. Create commit message matching detected style
 2. Attempt commit
@@ -213,55 +334,38 @@ See [git-operations.md](references/git-operations.md) and [pre-commit-handling.m
 git commit -m "$(cat <<'EOF'
 Implement section NN: Name
 
-- Summary of changes
-- Key features added
+- Very concise summary of features/changes
 
+Plan: section-NN-<name>.md
 Co-Authored-By: Claude <noreply@anthropic.com>
 EOF
 )"
 ```
 
-### Step 8: Update Section Documentation
+### Step 11: Update State
 
-See [section-doc-update.md](references/section-doc-update.md)
+After successful commit, update the session config:
 
-After successful commit, update the original section file to reflect what was actually implemented:
-
-1. Read `{sections_dir}/section-NN-<name>.md`
-2. Compare planned implementation vs actual:
-   - Code review fixes that changed the approach
-   - File paths that differed from plan
-   - Tests that were added/modified
-3. Update the section file with:
-   - Actual file paths created/modified
-   - Any deviations from original plan (with rationale)
-   - Final test count and coverage notes
-4. Commit the section doc update:
-   ```bash
-   git add {sections_dir}/section-NN-<name>.md
-   git commit -m "docs: update section-NN docs to match implementation"
-   ```
-
-This keeps section files as accurate documentation of what was built, not just what was planned.
-
-### Step 9: Update State
-
-```python
-update_section_state(
-    implementation_dir,
-    section_name,
-    status="complete",
-    commit_hash="{hash}",
-    review_file="review-section-NN.md",
-    pre_commit={hooks_ran, modification_retries, skipped}
-)
+```bash
+uv run {plugin_root}/scripts/tools/update_section_state.py \
+    --state-dir "{state_dir}" \
+    --section "{section_name}" \
+    --commit-hash "{commit_hash}"
 ```
 
-### Step 10: Mark Complete
+This records the commit hash so the section is recognized as complete on resume.
 
-Update TODO: `status: "completed"`
+### Step 12: Mark Complete
 
-### Step 11: Prompt Compaction
+Update task: `TaskUpdate(taskId=X, status="completed")`
+
+### Step 13: Context Check (Every 2nd Section)
+
+**Only prompt after sections 02, 04, 06, etc.** (every 2nd section).
+
+If this is NOT a 2nd section, skip directly to Step 14.
+
+If this IS a 2nd section (02, 04, 06, ...):
 
 ```
 ═══════════════════════════════════════════════════════════════
@@ -271,15 +375,21 @@ Section NN complete and committed.
 Completed: {M}/{N} sections
 Next: section-{NN+1}-{name}
 
-Consider compacting context before continuing.
-Type "continue" when ready.
+Context Management Options:
+  1. /clear + re-run /deep-implement (Recommended)
+     - Fresh context with full instructions
+     - Progress preserved via file-based recovery
 
-Note: After compaction, context reloads from {implementation_dir}/deep_implement_config.json
+  2. Continue in current session
+     - Auto-compact triggers at ~95% if needed
+     - May lose some instruction detail after compaction
+
+Type "continue" or run /clear and re-invoke /deep-implement @{sections_dir}/.
 ```
 
-Wait for user to say "continue".
+Wait for user response. If they say "continue", proceed to Step 14.
 
-### Step 12: Loop
+### Step 14: Loop
 
 Repeat from Step 1 for next section.
 
@@ -287,62 +397,10 @@ Repeat from Step 1 for next section.
 
 ## Finalization
 
-After all sections complete:
+After all sections complete, see [finalization.md](references/finalization.md):
 
-### Generate usage.md
-
-Introspect implemented code:
-- List created files
-- Identify main entry points
-- Generate example usage
-- Write to `{implementation_dir}/usage.md`
-
-```markdown
-# Usage Guide
-
-## Quick Start
-
-[Generated from implemented code]
-
-## Example Output
-
-[Hypothetical output - actual results may vary]
-
-## API Reference
-
-[Generated from implemented code]
-```
-
-### Output Summary
-
-```
-═══════════════════════════════════════════════════════════════
-DEEP-IMPLEMENT COMPLETE
-═══════════════════════════════════════════════════════════════
-
-Sections implemented: {N}/{N}
-Commits created: {N}
-Reviews written: {N}
-
-Generated files:
-  {implementation_dir}/
-  ├── code_review/
-  │   ├── section-01-diff.md
-  │   ├── section-01-review.md
-  │   └── ...
-  └── usage.md
-
-Git commits:
-  {hash1} Implement section 01: Name
-  {hash2} Implement section 02: Name
-  ...
-
-Next steps:
-  - Review {implementation_dir}/usage.md
-  - Run full test suite: {test_command}
-  - Create PR if ready
-═══════════════════════════════════════════════════════════════
-```
+1. Generate `{state_dir}/usage.md` with usage guide for what was built
+2. Print completion summary with commits, files, and next steps
 
 ---
 
@@ -397,20 +455,31 @@ Please review the section file.
 
 ---
 
-## Context After Compaction
+## Context Recovery
 
-After user compacts and says "continue":
+**After `/clear` + re-run `/deep-implement`:**
 
-1. Re-read `{implementation_dir}/deep_implement_config.json`
-2. Determine current state from `sections_state`
-3. Resume from next incomplete section
-4. TodoWrite with regenerated todos from config
+The setup script detects completed sections via `deep_implement_config.json` and marks their tasks complete. You'll resume from the next pending section with fresh instructions.
+
+**After compaction (if user chose "continue"):**
+
+1. Call `TaskList` to see current state
+2. Find context tasks to recover paths:
+   - `plugin_root=...` - extract value after `=`
+   - `sections_dir=...` - extract value after `=`
+   - `state_dir=...` - extract value after `=`
+3. Find next pending, unblocked task
+4. Resume workflow from that task
 
 ---
 
 ## Reference Documents
 
 - [implementation-loop.md](references/implementation-loop.md) - TDD workflow details
-- [code-review-protocol.md](references/code-review-protocol.md) - Review and fix process
+- [code-review-protocol.md](references/code-review-protocol.md) - Subagent review process
+- [code-review-interview.md](references/code-review-interview.md) - Interactive interview with user
+- [apply-interview-fixes.md](references/apply-interview-fixes.md) - Applying fixes from interview
+- [section-doc-update.md](references/section-doc-update.md) - Updating section documentation
 - [git-operations.md](references/git-operations.md) - Git handling
 - [pre-commit-handling.md](references/pre-commit-handling.md) - Hook handling
+- [finalization.md](references/finalization.md) - Usage guide and completion summary

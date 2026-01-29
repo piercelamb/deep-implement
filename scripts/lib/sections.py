@@ -12,6 +12,39 @@ from pathlib import Path
 from scripts.lib.config import load_session_config
 
 
+def parse_project_config_block(index_content: str) -> dict[str, str]:
+    """
+    Extract project configuration from PROJECT_CONFIG block.
+
+    Args:
+        index_content: Content of index.md file
+
+    Returns:
+        Dict with keys: target_dir, runtime, test_command
+        Returns empty dict if no valid config found.
+    """
+    pattern = r'<!--\s*PROJECT_CONFIG\s*\n(.*?)\nEND_PROJECT_CONFIG\s*-->'
+    match = re.search(pattern, index_content, re.DOTALL)
+
+    if not match:
+        return {}
+
+    config_content = match.group(1)
+    config = {}
+
+    for line in config_content.split('\n'):
+        line = line.strip()
+        # Skip empty lines and comments
+        if not line or line.startswith('#'):
+            continue
+        # Parse key: value pairs
+        if ':' in line:
+            key, value = line.split(':', 1)
+            config[key.strip()] = value.strip()
+
+    return config
+
+
 def parse_manifest_block(index_content: str) -> list[str]:
     """
     Extract section names from SECTION_MANIFEST block.
@@ -82,16 +115,14 @@ def _is_commit_reachable(commit_hash: str, git_root: Path) -> bool:
 
 def get_completed_sections(
     implementation_dir: Path,
-    git_root: Path | None
+    git_root: Path
 ) -> list[str]:
     """
     List sections with valid commit hashes (reachable in git log).
 
-    If no git available, falls back to checking status field.
-
     Args:
         implementation_dir: Path to implementation directory
-        git_root: Git repository root (None if no git)
+        git_root: Git repository root
 
     Returns:
         List of completed section names
@@ -109,12 +140,7 @@ def get_completed_sections(
 
         commit_hash = state.get("commit_hash")
 
-        if git_root and commit_hash:
-            # Verify commit is reachable
-            if _is_commit_reachable(commit_hash, git_root):
-                completed.append(section_name)
-        elif commit_hash:
-            # No git to verify, trust the status
+        if commit_hash and _is_commit_reachable(commit_hash, git_root):
             completed.append(section_name)
 
     return completed

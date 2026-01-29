@@ -5,10 +5,76 @@ from pathlib import Path
 
 from scripts.lib.sections import (
     parse_manifest_block,
+    parse_project_config_block,
     validate_section_file,
     get_completed_sections,
     extract_file_paths_from_section,
 )
+
+
+class TestParseProjectConfigBlock:
+    """Tests for parse_project_config_block function."""
+
+    def test_valid_config(self):
+        """Should parse valid project config block."""
+        content = """<!-- PROJECT_CONFIG
+runtime: python-uv
+test_command: uv run pytest
+END_PROJECT_CONFIG -->
+
+# Index content here
+"""
+        result = parse_project_config_block(content)
+
+        assert result["runtime"] == "python-uv"
+        assert result["test_command"] == "uv run pytest"
+
+    def test_config_with_spaces_in_values(self):
+        """Should handle values with spaces."""
+        content = """<!-- PROJECT_CONFIG
+runtime: typescript-pnpm
+test_command: pnpm test --coverage
+END_PROJECT_CONFIG -->"""
+
+        result = parse_project_config_block(content)
+
+        assert result["runtime"] == "typescript-pnpm"
+        assert result["test_command"] == "pnpm test --coverage"
+
+    def test_missing_config(self):
+        """Should return empty dict for missing config."""
+        content = "# Just a regular markdown file"
+
+        result = parse_project_config_block(content)
+
+        assert result == {}
+
+    def test_config_with_comments(self):
+        """Should skip comment lines in config."""
+        content = """<!-- PROJECT_CONFIG
+# This is a comment
+runtime: python-uv
+# Another comment
+test_command: pytest
+END_PROJECT_CONFIG -->"""
+
+        result = parse_project_config_block(content)
+
+        assert len(result) == 2
+        assert result["runtime"] == "python-uv"
+
+    def test_config_with_extra_whitespace(self):
+        """Should handle whitespace around keys and values."""
+        content = """<!-- PROJECT_CONFIG
+runtime: python-uv
+  test_command: uv run pytest -v
+
+END_PROJECT_CONFIG -->"""
+
+        result = parse_project_config_block(content)
+
+        assert result["runtime"] == "python-uv"
+        assert result["test_command"] == "uv run pytest -v"
 
 
 class TestParseManifestBlock:
@@ -129,12 +195,12 @@ class TestValidateSectionFile:
 class TestGetCompletedSections:
     """Tests for get_completed_sections function."""
 
-    def test_no_completed_sections(self, mock_implementation_dir):
+    def test_no_completed_sections(self, mock_implementation_dir, mock_git_repo):
         """Should return empty list when no sections complete."""
         config = {"sections_state": {}}
         (mock_implementation_dir / "deep_implement_config.json").write_text(json.dumps(config))
 
-        result = get_completed_sections(mock_implementation_dir, git_root=None)
+        result = get_completed_sections(mock_implementation_dir, git_root=mock_git_repo)
 
         assert result == []
 
@@ -176,24 +242,9 @@ class TestGetCompletedSections:
 
         assert "section-01-foundation" not in result
 
-    def test_no_git_fallback_to_status(self, mock_implementation_dir):
-        """Should fallback to status check when no git available."""
-        config = {
-            "sections_state": {
-                "section-01-foundation": {"status": "complete", "commit_hash": "abc123"}
-            }
-        }
-        (mock_implementation_dir / "deep_implement_config.json").write_text(json.dumps(config))
-
-        # No git root means can't verify hash, but status says complete
-        result = get_completed_sections(mock_implementation_dir, git_root=None)
-
-        # Should include based on status since no git to verify
-        assert "section-01-foundation" in result
-
-    def test_no_config_file(self, mock_implementation_dir):
+    def test_no_config_file(self, mock_implementation_dir, mock_git_repo):
         """Should return empty list if no config file."""
-        result = get_completed_sections(mock_implementation_dir, git_root=None)
+        result = get_completed_sections(mock_implementation_dir, git_root=mock_git_repo)
 
         assert result == []
 

@@ -1,0 +1,28 @@
+{
+  "config": {
+    "model_name": "gemini-3-pro-preview",
+    "batch_size": 10,
+    "pilot_mode": false,
+    "skip_synthesis": false,
+    "max_parallel_batches": 5
+  },
+  "input_stats": {
+    "fp_validation_dir": "/Users/plamb/Drata/ai-services/ai_services/scripts/experiments/control_detection/files/llm_outputs/fp_validation/20251229_221006",
+    "root_cause_count": 14,
+    "total_fps": 1868
+  },
+  "output_stats": {
+    "universal_rules": 16,
+    "rare_rules": 14,
+    "lint_errors": 30,
+    "coverage_pct": 0.0
+  },
+  "reproducibility": {
+    "git_sha": "84c1fde1030bc62103bb37cb352f09c8849893a3",
+    "prompt_hashes": {
+      "batch_summarize": "096c0ef5df719448",
+      "consolidate_rules": "eb1252d93e8c620e",
+      "synthesize_rules": "7b804feb8e79939d"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+ultrathink
+
+  read in @.agents/claude/dev/active/control_detection/results/temp/false_positive_acceptable_use_run
+
+  we just ran the 2nd experiment there -- big bump in precision and recall remained the same which is AWESOME. But precision is still _way too low_.
+
+  You can review the changes we made to get this bump here:  @.agents/claude/dev/active/control_detection/planning/false_positive_additions/combined.md:
+
+  The current state of the system prompt: @ai_services/scripts/experiments/control_detection/prompts/control_centric_false_positives/system
+
+  research the json files in @ai_services/scripts/experiments/control_detection/files/llm_outputs/control_centric/20251231_185617/Acceptable_Use_Policy
+  and try to get a feel for the 28 false positives remaining and try to understand what the LLM is doing wrong
+
+  You can figure out the ground truth here:
+  @ai_services/scripts/experiments/control_detection/files/experiments/template_policies/eval2_to_policy_mapping.json
+
+  If you need to review the actual policy document, its here:
+  @ai_services/scripts/experiments/control_detection/files/policies/template_policies/Acceptable Use Policy.pdf
+
+  Write your findings to @.agents/claude/dev/active/control_detection/planning/false_positive_additions2

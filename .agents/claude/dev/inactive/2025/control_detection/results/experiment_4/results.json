@@ -1,0 +1,31 @@
+{
+  "experiment_id": "experiment_4",
+  "timestamp": "20251227_222347",
+  "counts": {
+    "documents_evaluated": 36,
+    "ground_truth_controls": 582,
+    "predicted_controls": 2741,
+    "true_positives": 501,
+    "false_positives": 2240,
+    "false_negatives": 81
+  },
+  "metrics": {
+    "micro": {
+      "precision": 0.1828,
+      "recall": 0.8608,
+      "f1": 0.3015
+    },
+    "macro": {
+      "precision": 0.1965,
+      "recall": 0.8753,
+      "f1": 0.2922
+    }
+  },
+  "retrieval": {
+    "embedding_recall": 0.9845,
+    "topk_recall": 0.9708,
+    "total_gt_for_retrieval": 582,
+    "total_above_threshold": 573,
+    "total_in_topk": 565
+  }
+}

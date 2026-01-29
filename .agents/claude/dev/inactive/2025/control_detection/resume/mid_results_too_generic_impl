@@ -1,0 +1,29 @@
+⏺ I see there's a deeper issue - the aggregator's _parse_patterns method still expects the old patterns format, but our prompts now output decision_rules. This is a gap in the pipeline.
+
+  For the logging question specifically, the key user-facing messages are in run.py which I've updated. However, I should note that:
+
+  1. Updated logging (done):
+    - CLI description: "extract actionable decision rules"
+    - Completion summary: "Universal rules", "Rare rules", "Total decision rules"
+  2. Gap to address: The internal pipeline (_parse_patterns) still creates AggregatedPattern objects from the old patterns format. To fully use the new decision_rules format, we'd need to update the aggregator to use parse_llm_response and store DecisionRule objects.
+
+  Would you like me to update the aggregator to handle the new decision_rules format from the LLM responses? This would involve:
+  1. Updating _parse_patterns to detect and handle decision_rules format
+  2. Either converting DecisionRule → AggregatedPattern for storage, or updating RoundOutput to store DecisionRules
+
+> yes update aggregator to handle decision_rules format
+
+⏺ Read(ai_services/scripts/experiments/control_detection/reason_aggregator/aggregator.py)
+  ⎿  Read 100 lines
+
+⏺ Let me also read the consolidation parsing method:
+
+⏺ Search(pattern: "_parse_consolidation|merged_patterns", path:
+        "ai_services/scripts/experiments/control_detection/reason_aggregator/aggregator.py", output_mode: "content")
+  ⎿  Found 39 lines (ctrl+o to expand)
+
+✶ Compacting conversation… (esc to interrupt · ctrl+t to hide todos · thought for 2s)
+  ⎿  ☐ Update _parse_patterns to detect and handle decision_rules format
+     ☐ Create DecisionRule to AggregatedPattern conversion
+     ☐ Update consolidation parsing for merged_rules format
+     ☐ Run tests to verify changes

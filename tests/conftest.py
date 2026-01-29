@@ -19,8 +19,13 @@ def mock_sections_dir(temp_dir):
     sections_dir = temp_dir / "sections"
     sections_dir.mkdir()
 
-    # Create index.md with manifest
-    index_content = """<!-- SECTION_MANIFEST
+    # Create index.md with project config and manifest
+    index_content = """<!-- PROJECT_CONFIG
+runtime: python-uv
+test_command: uv run pytest
+END_PROJECT_CONFIG -->
+
+<!-- SECTION_MANIFEST
 section-01-foundation
 section-02-models
 END_MANIFEST -->
@@ -74,8 +79,8 @@ def sample_config():
     return {
         "plugin_root": "/path/to/plugin",
         "sections_dir": "/path/to/sections",
-        "implementation_dir": "/path/to/implementation",
-        "git_available": True,
+        "target_dir": "/path/to/target",
+        "state_dir": "/path/to/state",
         "git_root": "/path/to/repo",
         "commit_style": "conventional",
         "test_command": "uv run pytest",

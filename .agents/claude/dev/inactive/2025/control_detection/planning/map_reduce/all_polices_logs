@@ -1,0 +1,173 @@
+➜  ai-services git:(plamb/DATA-5698/policy-to-control-exp) ✗ uv run python -m ai_services.scripts.experiments.control_detection.reason_aggregator.run --all
+Starting full aggregation...
+
+############################################################
+STARTING MAP-REDUCE AGGREGATION
+############################################################
+  Initial items: 37 policies
+############################################################
+
+============================================================
+ROUND 1 START
+============================================================
+  Items: 37
+  Pairs to process: 19 (max_parallel=4, effective=4)
+  Total Universal Patterns: 0
+  Total Rare Patterns: 0
+  TOTAL PATTERNS: 0
+============================================================
+  >>> Round 1 Pair 1/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 13R = 13 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 2/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 10R = 10 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 3/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 12R = 12 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 4/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 12R = 12 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 5/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 11R = 11 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 6/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 13R = 13 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 7/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 13R = 13 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 8/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 11R = 11 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 9/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 9R = 9 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 10/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 13R = 13 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 11/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 10R = 10 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 12/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 10R = 10 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 13/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 10R = 10 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 14/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 9R = 9 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 15/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 10R = 10 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 16/19 complete: SOLO passthrough [0U + 0R = 0 patterns]
+  >>> Round 1 Pair 17/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 10R = 10 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 18/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 7R = 7 out (reduced by 0, 0.0%)
+  >>> Round 1 Pair 19/19 complete: [0U+0R] + [0U+0R] = 0 in -> 0U + 12R = 12 out (reduced by 0, 0.0%)
+
+============================================================
+ROUND 1 COMPLETE
+============================================================
+  Items: 19
+  Total Universal Patterns: 0
+  Total Rare Patterns: 195
+  TOTAL PATTERNS: 195
+============================================================
+
+============================================================
+ROUND 2 START
+============================================================
+  Items: 19
+  Pairs to process: 10 (max_parallel=4, effective=4)
+  Total Universal Patterns: 0
+  Total Rare Patterns: 195
+  TOTAL PATTERNS: 195
+============================================================
+  >>> Round 2 Pair 1/10 complete: [0U+12R] + [0U+13R] = 25 in -> 9U + 5R = 14 out (reduced by 11, 44.0%)
+  >>> Round 2 Pair 2/10 complete: [0U+10R] + [0U+12R] = 22 in -> 8U + 1R = 9 out (reduced by 13, 59.1%)
+  >>> Round 2 Pair 3/10 complete: [0U+11R] + [0U+11R] = 22 in -> 8U + 4R = 12 out (reduced by 10, 45.5%)
+  >>> Round 2 Pair 4/10 complete: [0U+13R] + [0U+13R] = 26 in -> 10U + 5R = 15 out (reduced by 11, 42.3%)
+  >>> Round 2 Pair 5/10 complete: [0U+13R] + [0U+9R] = 22 in -> 6U + 8R = 14 out (reduced by 8, 36.4%)
+  >>> Round 2 Pair 6/10 complete: [0U+10R] + [0U+10R] = 20 in -> 7U + 5R = 12 out (reduced by 8, 40.0%)
+  >>> Round 2 Pair 7/10 complete: SOLO passthrough [0U + 0R = 0 patterns]
+  >>> Round 2 Pair 8/10 complete: [0U+10R] + [0U+10R] = 20 in -> 7U + 6R = 13 out (reduced by 7, 35.0%)
+  >>> Round 2 Pair 9/10 complete: [0U+10R] + [0U+9R] = 19 in -> 7U + 4R = 11 out (reduced by 8, 42.1%)
+  >>> Round 2 Pair 10/10 complete: [0U+7R] + [0U+12R] = 19 in -> 7U + 5R = 12 out (reduced by 7, 36.8%)
+
+============================================================
+ROUND 2 COMPLETE
+============================================================
+  Items: 10
+  Total Universal Patterns: 69
+  Total Rare Patterns: 43
+  TOTAL PATTERNS: 112
+============================================================
+
+============================================================
+ROUND 3 START
+============================================================
+  Items: 10
+  Pairs to process: 5 (max_parallel=4, effective=4)
+  Total Universal Patterns: 69
+  Total Rare Patterns: 43
+  TOTAL PATTERNS: 112
+============================================================
+  >>> Round 3 Pair 1/5 complete: [10U+5R] + [8U+4R] = 27 in -> 10U + 6R = 16 out (reduced by 11, 40.7%)
+  >>> Round 3 Pair 2/5 complete: [7U+4R] + [7U+6R] = 24 in -> 9U + 4R = 13 out (reduced by 11, 45.8%)
+  >>> Round 3 Pair 3/5 complete: [8U+1R] + [9U+5R] = 23 in -> 10U + 3R = 13 out (reduced by 10, 43.5%)
+  >>> Round 3 Pair 4/5 complete: [6U+8R] + [7U+5R] = 26 in -> 9U + 6R = 15 out (reduced by 11, 42.3%)
+  >>> Round 3 Pair 5/5 complete: [7U+5R] + [0U+0R] = 12 in -> 7U + 0R = 7 out (reduced by 5, 41.7%)
+
+============================================================
+ROUND 3 COMPLETE
+============================================================
+  Items: 5
+  Total Universal Patterns: 45
+  Total Rare Patterns: 19
+  TOTAL PATTERNS: 64
+============================================================
+
+============================================================
+ROUND 4 START
+============================================================
+  Items: 5
+  Pairs to process: 3 (max_parallel=4, effective=3)
+  Total Universal Patterns: 45
+  Total Rare Patterns: 19
+  TOTAL PATTERNS: 64
+============================================================
+  >>> Round 4 Pair 1/3 complete: SOLO passthrough [7U + 0R = 7 patterns]
+  >>> Round 4 Pair 2/3 complete: [10U+3R] + [10U+6R] = 29 in -> 11U + 4R = 15 out (reduced by 14, 48.3%)
+  >>> Round 4 Pair 3/3 complete: [9U+6R] + [9U+4R] = 28 in -> 10U + 2R = 12 out (reduced by 16, 57.1%)
+
+============================================================
+ROUND 4 COMPLETE
+============================================================
+  Items: 3
+  Total Universal Patterns: 28
+  Total Rare Patterns: 6
+  TOTAL PATTERNS: 34
+============================================================
+
+============================================================
+ROUND 5 START
+============================================================
+  Items: 3
+  Pairs to process: 2 (max_parallel=4, effective=2)
+  Total Universal Patterns: 28
+  Total Rare Patterns: 6
+  TOTAL PATTERNS: 34
+============================================================
+  >>> Round 5 Pair 1/2 complete: SOLO passthrough [7U + 0R = 7 patterns]
+  >>> Round 5 Pair 2/2 complete: [11U+4R] + [10U+2R] = 27 in -> 12U + 5R = 17 out (reduced by 10, 37.0%)
+
+============================================================
+ROUND 5 COMPLETE
+============================================================
+  Items: 2
+  Total Universal Patterns: 19
+  Total Rare Patterns: 5
+  TOTAL PATTERNS: 24
+============================================================
+
+============================================================
+ROUND 6 START
+============================================================
+  Items: 2
+  Pairs to process: 1 (max_parallel=4, effective=1)
+  Total Universal Patterns: 19
+  Total Rare Patterns: 5
+  TOTAL PATTERNS: 24
+============================================================
+  >>> Round 6 Pair 1/1 complete: [12U+5R] + [7U+0R] = 24 in -> 8U + 5R = 13 out (reduced by 11, 45.8%)
+
+============================================================
+ROUND 6 COMPLETE
+============================================================
+  Items: 1
+  Total Universal Patterns: 8
+  Total Rare Patterns: 5
+  TOTAL PATTERNS: 13
+============================================================
+
+############################################################
+AGGREGATION COMPLETE
+############################################################
+  Total Rounds: 6
+  Final Universal Patterns: 8
+  Final Rare Patterns: 5
+  TOTAL FINAL PATTERNS: 13
+  Source Policies: 37
+############################################################
+Aggregation complete!

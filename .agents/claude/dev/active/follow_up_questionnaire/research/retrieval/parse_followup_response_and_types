@@ -1,0 +1,136 @@
+Here's the plan to add VellumFollowupResponse support to the gather_evidence workflow:
+
+  Analysis
+
+  Current state:
+  - VellumRetrievedContent = VellumDocExcerpt | VellumGeneratedContent (line 405 in evidence/schema.py)
+  - VellumSOC2SummaryTrack extends VellumGeneratedContent, so it's already valid VellumRetrievedContent
+  - VellumFollowupResponse extends RankedFollowupResponse → FollowupResponse → QuestionnaireResponse → Reference (separate hierarchy)
+
+  Changes needed:
+  File: ai_services/shared/schema/evidence/schema.py:405
+  Change: Add VellumFollowupResponse to VellumRetrievedContent union
+  ────────────────────────────────────────
+  File: ai_services/vellum/support/.../gather_evidence/run.py
+  Change: Add pattern matching for VellumFollowupResponse in parse_vellum_search_result()
+  ────────────────────────────────────────
+  File: ai_services/vellum/support/.../gather_evidence/run.py
+  Change: Handle VellumFollowupResponse in convert_to_doc_excerpts() (skip with log - it's a Q&A pair, not a document excerpt)
+  Key insight about convert_to_doc_excerpts():
+  - VellumDocExcerpt → kept as-is (page-level PDF references)
+  - VellumSOC2SummaryTrack → expanded to source_refs (underlying doc excerpts)
+  - VellumFollowupResponse → should be skipped (it's Q&A evidence, not document pages - has no meaningful conversion to doc excerpts)
+
+  The LLM will still see and reason about followup questionnaire evidence during retrieval → prompt. The "skip" only affects the final
+  output DTO which expects document-level references.
+
+  TODO List
+
+  1. Add VellumFollowupResponse to VellumRetrievedContent union type
+  2. Update parse_vellum_search_result() to handle VellumFollowupResponse
+  3. Update convert_to_doc_excerpts() to handle VellumFollowupResponse (skip with log)
+  4. Update error message in parse_vellum_search_result() to include new pattern
+  5. Run tests and fix any issues
+
+  Want me to proceed with the implementation?
+
+✻ Churned for 1m 59s
+
+❯ proceed with the implementation
+
+⏺ Read(ai_services/shared/schema/evidence/schema.py)
+  ⎿  Read 50 lines
+
+⏺ Read(ai_services/shared/schema/evidence/schema.py)
+  ⎿  Read 12 lines
+
+⏺ Now I'll add the import and update the union type. First, let me add the import at the top:
+
+⏺ Update(ai_services/shared/schema/evidence/schema.py)
+  ⎿  Error editing file
+
+⏺ I need to add the import for VellumFollowupResponse. Since questionnaire/schema.py imports from evidence/schema.py, I'll add the
+  import at the bottom of the file to avoid circular imports:
+
+⏺ Update(ai_services/shared/schema/evidence/schema.py)
+  ⎿  User rejected update to ai_services/shared/schema/evidence/schema.py
+      402          )
+      403
+      404
+      405 -VellumRetrievedContent = VellumDocExcerpt | VellumGeneratedContent
+      405 +# Import at bottom to avoid circular import (questionnaire/schema.py imports Reference from here)
+      406 +from ai_services.shared.schema.questionnaire.schema import VellumFollowupResponse
+      407 +
+      408 +VellumRetrievedContent = VellumDocExcerpt | VellumGeneratedContent | VellumFollowupResponse
+
+❯ lets think through how we can fix this circular import issue by moving stuff around before we make this change
+
+⏺ Good thinking. Let's analyze the circular import issue:
+
+  Current dependency chain:
+  evidence/schema.py
+    └── defines: Reference, SourcedContent, VellumDocExcerpt, VellumGeneratedContent, VellumRetrievedContent
+
+  questionnaire/schema.py
+    └── imports: Reference, SourcedContent from evidence/schema.py
+    └── defines: VellumFollowupResponse
+
+  The problem:
+  If evidence/schema.py imports VellumFollowupResponse from questionnaire/schema.py, we get:
+  evidence/schema.py → questionnaire/schema.py → evidence/schema.py (circular!)
+
+  Options to resolve:
+
+  1. Move VellumRetrievedContent to a new module (e.g., evidence/retrieved_content.py)
+    - This module imports from both evidence/schema.py and questionnaire/schema.py
+    - Consumers import VellumRetrievedContent from the new module
+    - Minimal changes to existing classes
+  2. Move base classes (Reference, SourcedContent) to a shared base module
+    - Create evidence/base.py with the base classes
+    - Both evidence/schema.py and questionnaire/schema.py import from base
+    - More invasive but architecturally cleaner
+  3. Move VellumFollowupResponse into evidence/schema.py
+    - Since it's "retrieved content" for evidence gathering, it arguably belongs there
+    - Would require moving FollowupQuestionnaire, FollowupQuestionnaireItem dependencies too
+    - Could get messy
+  4. Define VellumRetrievedContent in run.py or a workflow-specific module
+    - Since it's primarily used in the Vellum workflow, define it where it's used
+    - Pragmatic but less reusable
+
+  Which approach would you prefer? I'd lean toward Option 1 - it's the least invasive and keeps concerns separated.
+
+❯ how did we get around this issue with @ai_services/shared/schema/artifact/documents/soc2/schema.py -> VellumSOC2SummaryTrack?
+  ⎿  Read ai_services/shared/schema/artifact/documents/soc2/schema.py (841 lines)
+
+⏺ Great question! Looking at the imports:
+
+  soc2/schema.py (line 27):
+  from ai_services.shared.schema.evidence.schema import SourcedContent, VellumDocExcerpt, VellumGeneratedContent
+
+  evidence/schema.py (line 405):
+  VellumRetrievedContent = VellumDocExcerpt | VellumGeneratedContent
+
+  The trick: VellumSOC2SummaryTrack extends VellumGeneratedContent, which is already in the union. So evidence/schema.py never needs to
+   import from soc2/schema.py - the union uses the base class, and subclasses are automatically valid through inheritance!
+
+  The import direction is one-way:
+  evidence/schema.py (defines VellumGeneratedContent, VellumRetrievedContent)
+         ↑
+  soc2/schema.py (imports VellumGeneratedContent, defines VellumSOC2SummaryTrack extends it)
+
+  For VellumFollowupResponse, we have options:
+
+  1. Make it extend VellumGeneratedContent - But semantically it's not "generated content", it's questionnaire answers
+  2. Create a new base class in evidence/schema.py (e.g., VellumQuestionnaireContent) and add it to the union, then have
+  VellumFollowupResponse extend it
+  3. Move VellumFollowupResponse to evidence/schema.py - It's evidence after all
+
+  Which approach feels right to you? Option 2 seems cleanest - create a base class for questionnaire-based evidence in
+  evidence/schema.py.
+
+  Todos · ctrl+t to hide todos
+  ☐ Add VellumFollowupResponse to VellumRetrievedContent union type
+  ☐ Update parse_vellum_search_result() to handle VellumFollowupResponse
+  ☐ Update convert_to_doc_excerpts() to handle VellumFollowupResponse (skip with log)
+  ☐ Update error message in parse_vellum_search_result() to include new pattern
+  ☐ Run tests and fix any issues

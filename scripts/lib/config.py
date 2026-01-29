@@ -52,9 +52,9 @@ def save_session_config(implementation_dir: Path, config: dict) -> None:
 def create_session_config(
     plugin_root: Path,
     sections_dir: Path,
-    implementation_dir: Path,
-    git_available: bool,
-    git_root: Path | None,
+    target_dir: Path,
+    state_dir: Path,
+    git_root: Path,
     commit_style: str,
     test_command: str = "uv run pytest",
     sections: list[str] | None = None,
@@ -66,9 +66,9 @@ def create_session_config(
     Args:
         plugin_root: Path to the deep-implement plugin
         sections_dir: Path to sections directory
-        implementation_dir: Path to implementation directory
-        git_available: Whether git is available
-        git_root: Git repository root path (None if no git)
+        target_dir: Path to target directory for implementation code
+        state_dir: Path to state directory for session config and reviews
+        git_root: Git repository root path
         commit_style: Detected commit style ("conventional", "simple", "unknown")
         test_command: Command to run tests
         sections: List of section names from manifest
@@ -80,9 +80,9 @@ def create_session_config(
     return {
         "plugin_root": str(plugin_root),
         "sections_dir": str(sections_dir),
-        "implementation_dir": str(implementation_dir),
-        "git_available": git_available,
-        "git_root": str(git_root) if git_root else None,
+        "target_dir": str(target_dir),
+        "state_dir": str(state_dir),
+        "git_root": str(git_root),
         "commit_style": commit_style,
         "test_command": test_command,
         "sections": sections or [],

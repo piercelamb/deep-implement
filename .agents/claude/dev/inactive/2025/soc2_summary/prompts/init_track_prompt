@@ -1,0 +1,12 @@
+now that you have a feel for this task, I want you to init the CUEC or Complementary User Entity Controls track of the soc2 summary pipeline:
+  - retrieval code: @ai_services/vellum/workflows/artifact_intelligence_q2_fy26/soc2_summary/nodes/retrieve_CUEC.py
+  - vellum prompt file: @ai_services/vellum/workflows/artifact_intelligence_q2_fy26/soc2_summary/nodes/prompt_CUEC.py
+  - TLD that contains the prompt parts:
+  @ai_services/vellum/support/artifact_intelligence_q2_fy26/soc2_summary/prompts/cuec
+  - Dont forget to add it to merge_summaries:
+  @ai_services/vellum/workflows/artifact_intelligence_q2_fy26/soc2_summary/nodes/merge_summaries.py
+  - SOC2 Summary types: @ai_services/shared/schema/artifact/documents/soc2/schema.py
+
+  You can look at the overview/exceptions/management response/opinion tracks to see how we've implemented them and understand more about how to implement the opinion track
+
+  Create a todo list to accomplish these task(s)

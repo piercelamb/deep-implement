@@ -1,0 +1,125 @@
+{
+  "error_count": 30,
+  "errors": [
+    {
+      "rule_id": "rule_f4c1ba3683deaea5",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_f71663f399994826",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_ad731f69774825fe",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_a68ef2b2f02ce8a7",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_ecf3656a0e3cb81d",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_bfd066f2369fad3b",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_c11f967eb27429df",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_0cd0b7123534c1c9",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_410adb131f6fae20",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_c5a618abd6ff7738",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_5d06c0ba5687ac39",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_6a31c035ac9367b1",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_82aa7ff44fb11da4",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_a94f37966f06557f",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_c45434136a936970",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_8addf4f14fd1c304",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_b31c6055624f316b",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_7d5d53939a4e0ca6",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_5a6c650bdbd266d8",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_aa9fc7e31e97b7e9",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_098a0f9fa5bddb64",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_3db19e8f19c19a3f",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_2c1416200aeb71aa",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_20ec87c76e1e006b",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_4696de3a11107865",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_f1f53970eece01ca",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_7aba25be07a136a0",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_b3ddfefa132a7a22",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_02c32b30f2a68728",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    },
+    {
+      "rule_id": "rule_faaf580c0970ccb0",
+      "error": "No supporting_fp_indices - rule has no provenance"
+    }
+  ]
+}

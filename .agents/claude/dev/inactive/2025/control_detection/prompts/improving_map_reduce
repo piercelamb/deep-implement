@@ -1,0 +1,28 @@
+ultrathink
+
+  Build a document that explains this to someone completely unaccustomed with this. It should: describe what problem we're trying to solve
+  with the reason aggregator, describe our solution and how the mapreduce process works.
+
+  we've got these planning documents if you need them to refresh your memory:
+  @.agents/claude/dev/active/control_detection/planning/map_reduce/plan.md
+  @.agents/claude/dev/active/control_detection/planning/map_reduce/universal_rare/plan.md
+
+   The document should display the `aggregate_reasons` and `consolidate_patterns` prompts in full:
+
+  @ai_services/scripts/experiments/control_detection/reason_aggregator/prompts/aggregate_reasons
+  @ai_services/scripts/experiments/control_detection/reason_aggregator/prompts/consolidate_patterns
+
+  Summarize the results of running the reason aggregator, the logs are here:
+  @.agents/claude/dev/active/control_detection/planning/map_reduce/all_polices_logs
+
+   Paste in the results from `unversal_patterns.md` and `rare_patterns.md`:
+
+  @ai_services/scripts/experiments/control_detection/files/experiments/template_policies/aggregated_patterns/universal_patterns.md
+  @ai_services/scripts/experiments/control_detection/files/experiments/template_policies/aggregated_patterns/rare_patterns.md
+
+  complete the document with your analysis of the results:
+  @.agents/claude/dev/active/control_detection/planning/map_reduce/opus_analysis
+
+  We will use this document to get others perspectives that have no context on what we're doing
+
+  Write the document to @.agents/claude/dev/active/control_detection/planning/map_reduce/results_too_generic

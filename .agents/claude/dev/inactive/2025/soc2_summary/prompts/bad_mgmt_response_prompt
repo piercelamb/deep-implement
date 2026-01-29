@@ -1,0 +1,594 @@
+You are an expert at analyzing SOC 2 Type II audit reports and extracting management responses to exceptions.
+
+
+Below you will be given a list of excerpts extracted from a SOC 2 Type II (SOC2) document. Your goal is to find management's responses to exceptions that were noted in the SOC2 control testing.
+
+<soc2_excerpts>
+<index_1>
+Filename: 1Pswd-2022-SOC2TypeII.pdf
+CC2.3.3
+A system description is documented and made available to external users of the system that includes a description of the entity organization structure, system support functions, processes, and organizational roles and responsibilities, and incident reporting via the Company’s customer- facing website. The description delineates the boundaries of the system and system processes that include infrastructure, software, people, processes and procedures, data, and contact information. Inspected the Terms of Service available on the customer- facing website to verify that the system description was made available to external users. 32
+Test Results
+No exceptions noted. No exceptions noted. No exceptions noted.
+
+CC3.0 RISK ASSESSMENT
+Ref. #
+Client Controls
+Tests of Controls
+Test Results
+CC3.1 - The entity specifies objectives with sufficient clarity to enable the identification and assessment of risks relating to objectives. CC3.1.1
+A documented risk management program is in place that includes guidance on the identification of potential threats, rating the significance of the risks associated with the identified threats, and mitigation strategies for those risks. Inspected the Risk Assessment Policy to verify that a program was established for the identification of potential threats, rating the significance of the risks associated with the identified threats, and mitigation strategies for those risks. No exceptions noted. CC3.1.2 Management performs an annual risk assessment, based on the objectives established by management. The objectives incorporate the relevant service commitments and system requirements. Inspected the annual risk assessment to verify that the risk assessment included consideration of business objectives, relevant service commitments, and system requirements. Exception noted: The annual risk assessment was not performed in 2021. The risk assessment performed in 2022 was subsequent to the examination period. CC3.2 - The entity identifies risks to the achievement of its objectives across the entity and analyzes risks as a basis for determining how the risks should be managed. CC3.2.1 Management performs an annual risk assessment
+Inspected the annual risk assessment to verify that risks, threats, and changes were identified and assessed. Exception noted: The annual risk assessment was not performed in 2021.
+that includes the following:
+Determining business objectives. • Involving appropriate levels of management. Analyzing risks associated with the threats. • Identifying threats to operations, including security threats, using information technology asset records. Considers the significance of the risks. • Determining a risk mitigation strategy. The risk assessment performed in 2022 was subsequent to the examination period. 33
+
+Ref. #
+Client Controls
+Tests of Controls
+CC3.2.2
+On an annual basis, the master asset listing is reviewed by management for completeness and accuracy. Inspected the master list review to verify system components were tracked and reviewed by management annually. CC3.3 - The entity considers the potential for fraud in assessing risks to the achievement of objectives. CC3.3.1 Management conducts a fraud risk assessment as part of the annual risk assessment to identify the various ways that fraud and misconduct can occur. Inspected the risk assessment documentation to verify management evaluated and assessed fraud risks as part of the annual risk assessment. CC3.4 - The entity identifies and assesses changes that could significantly impact the system of internal control. CC3.4.1 Management performs an annual risk assessment
+Inspected the annual risk assessment to verify that risks, threats, and changes were identified and assessed. that evaluates:
+changes in the regulatory, economic, physical, and business environment, including industry, competitors, and consumers the potential impact of new business lines, dramatically altered business lines, or divested business operations, rapid growth, changing reliance on foreign geographies, and new technologies
+
+management and their respective attitudes and philosophies on the system of internal control
+changes in technology • vendor and business partner relationships
+34
+Test Results
+No exceptions noted. Exception noted: The annual risk assessment was not performed in 2021. The risk assessment performed in 2022 was subsequent to the examination period. Exception noted: The annual risk assessment was not performed in 2021. The risk assessment performed in 2022 was subsequent to the examination period.
+
+CC4.0 MONITORING ACTIVITIES
+Ref. #
+Client Controls
+Tests of Controls
+Test Results
+CC4.1 - The entity selects, develops, and performs ongoing and/or separate evaluations to ascertain whether the components of internal control are present and functioning. CC4.1.1 Management performs an annual risk assessment, based on the objectives established by management. The objectives incorporate the relevant service commitments and system requirements. Inspected the annual risk assessment to verify that the risk assessment included consideration of business objectives, relevant service commitments, and system requirements. Exception noted: The annual risk assessment was not performed in 2021. The risk assessment performed in 2022 was subsequent to the examination period. CC4.1.2
+Continuous penetration testing is performed by an independent third-party vendor. Third-party reports are obtained identifying the findings and resolutions. Inspected the third-party penetration testing reports for the examination period to verify that continuous penetration testing was performed. No exceptions noted. CC4.1.3 Management obtains and reviews SOC reports for
+subservice organizations on an annual basis. Inspected management’s 2022 SOC review to verify that management obtained and reviewed the current AWS SOC report on an annual basis. No exceptions noted. 35
+
+Ref. #
+Client Controls
+Tests of Controls
+Test Results
+CC4.2 - The entity evaluates and communicates internal control deficiencies in a timely manner to those parties responsible for taking corrective action, including senior management and the board of directors, as appropriate. CC4.2.1
+Exception noted: The annual risk assessment was not performed in 2021. As part of the annual risk assessment, management identifies controls that have been designed and operated to address risks. When the need for new controls is identified, management develops the requirements for the new controls and uses the change management process to implement them. Inspected the annual risk assessment to verify that management established controls to mitigate risks identified. The risk assessment performed in 2022 was subsequent to the examination period. CC4.2.2
+If applicable, a remediation plan is developed and changes are tracked to implementation to remediate critical and high findings, at a minimum, identified during the ongoing penetration tests. Inspected the third-party penetration testing reports for the examination period and remediation plans and tickets, where applicable, to verify that remediation plans were created for high or critical findings and changes were tracked through implementation, as applicable. No exceptions noted. 36
+
+CC5.0 CONTROL ACTIVITIES
+Ref. #
+Client Controls
+Tests of Controls
+Test Results
+CC5.1 - The entity selects and develops control activities that contribute to the mitigation of risks to the achievement of objectives to acceptable levels. CC5.1.1
+Policies and procedures related to risk management are developed, implemented, and reviewed annually. Inspected the Risk Assessment Policy to verify it outlined policies and procedures to implement its risk mitigation strategy, reassess the suitability of the design, and implementation of control activities based on the operation and monitoring of those activities, and it was reviewed annually. No exceptions noted. CC5.1.2
+As part of the annual risk assessment, management identifies controls that have been designed and operated to address risks. When the need for new controls is identified, management develops the requirements for the new controls and uses the change management process to implement them. Inspected the annual risk assessment to verify that management established controls to mitigate risks identified. Exception noted: The annual risk assessment was not performed in 2021. The risk assessment performed in 2022 was subsequent to the examination period. CC5.2 - The entity also selects and develops general control activities over technology to support the achievement of objectives. CC5.2.1
+AgileBits maintains established policies and procedures, which outline operating practices and business conduct for personnel. Policies and procedures are reviewed annually. Inspected the policies and procedures to verify that AgileBits maintained policies and procedures outlining operating practices and business conduct for personnel that were reviewed annually. No exceptions noted. The policies and procedures include the following:
+• Security Manual • Software Development Lifecycle (SDLC) • Disaster Recovery Plan • Risk Assessment Policy
+Incident Response Plan
+37
+
+Ref. #
+Client Controls
+Tests of Controls
+CC5.3 - The entity deploys control activities through policies that establish what is expected and in procedures that put policies into action. CC5.3.1
+Roles and responsibilities of key managers are defined in written job descriptions, including duties such as proper oversight, management, and monitoring of vendor, security and availability activities. Inspected the job descriptions for key managers to verify that roles and responsibilities were defined, including duties such as proper oversight, management, and monitoring activities. CC5.3.2
+The Security Manual is available to personnel via the intranet. Inspected the intranet to verify that the Security Manual was posted and available to personnel. CC5.3.3
+Personnel are required to read and accept the Security Manual upon hire and annually thereafter. Inspected the signed acknowledgements for a sample of new hires during the examination period to verify the Security Manual was communicated and acknowledged upon hire. Inspected the signed acknowledgements for a sample of sample of active personnel during the examination period to verify the Security Manual was communicated and acknowledged annually. CC5.3.4
+Active personnel’s abilities to meet job requirements are evaluated as part of the annual performance review process. Inspected the performance evaluations for a sample of active personnel during the examination period to verify that personnel were evaluated annually. 38
+Test Results
+No exceptions noted. No exceptions noted. No exceptions noted. Exceptions noted: The Security Manual was not communicated and acknowledged annually. Exceptions noted: For 3 of 53 active personnel sampled, performance evaluations were not conducted.
+
+Ref. #
+CC5.3.5
+Client Controls
+AgileBits maintains established policies and procedures, which outline operating practices and business conduct for personnel. Policies and procedures are reviewed annually.
+</index_1>
+<index_2>
+Filename: 1Pswd-2022-SOC2TypeII.pdf
+If applicable, a remediation plan is developed and changes are tracked to implementation to remediate critical and high findings, at a minimum, identified during the ongoing penetration tests. Inspected the third-party penetration testing reports for the examination period to verify that continuous penetration testing was performed. Inspected the third-party penetration testing reports for the examination period and remediation plans and tickets, where applicable, to verify that remediation plans were created for high or critical findings and changes were tracked through implementation, as applicable. 45
+Test Results
+No exceptions noted. No exceptions noted. No exceptions noted. No exceptions noted. No exceptions noted.
+
+Ref. #
+Client Controls
+Tests of Controls
+Test Results
+CC7.2 - The entity monitors system components and the operation of those components for anomalies that are indicative of malicious acts, natural disasters, and errors affecting the entity's ability to meet its objectives; anomalies are analyzed to determine whether they represent security events. CC7.2.1
+Customer responsibilities, which include responsibility for reporting operational failures, incidents, problems, security breach, concerns and complaints, and the process for doing so, are described on the customer-facing website. Inspected the Terms of Service available on the customer- facing website to verify that customer responsibilities were made available to external users. No exceptions noted. CC7.2.2
+Security incidents are reported to the Incident Response Team (IRT) and tracked through to resolution in a ticketing system. Inspected the incident ticket details for a sample of security incidents during the examination period to verify that security incidents were tracked to resolution. No exceptions noted. CC7.3 - The entity evaluates security events to determine whether they could or have resulted in a failure of the entity to meet its objectives (security incidents) and, if so, takes actions to prevent or address such failures. CC7.3.1
+An Incident Response Plan is established to define the resolution and escalating of reported events. Inspected the Incident Response Policy to verify that it established defined protocols for resolving and escalating reported events. No exceptions noted. CC7.3.2
+IRT personnel follow defined protocols for evaluating and escalating reported events. Inspected the incident ticket details for a sample of security incidents during the examination period to verify that reported events were investigated in accordance with defined protocols for resolution. No exceptions noted. CC7.4 - The entity responds to identified security incidents by executing a defined incident response program to understand, contain, remediate, and communicate security incidents, as appropriate. CC7.4.1 Management has established defined roles and
+Inspected the job descriptions for key managers to verify that roles and responsibilities were defined, including duties such as proper oversight, management, and monitoring activities related to incident response. No exceptions noted. responsibilities to oversee the implementation of information security policies including incident response. 46
+
+Ref. #
+Client Controls
+Tests of Controls
+CC7.4.2
+An Incident Response Plan is established to define the resolution and escalating of reported events to include that procedures are in place to contain security incidents, mitigate effects of ongoing security incidents, restore operations to an interim state and communicate security incidents to affected parties. Inspected the Incident Response Plan to verify that it established defined protocols for resolving and escalating reported events to include that procedures are in place to contain security incidents, mitigate effects of ongoing security incidents, restore operations to an interim state and communicate security incidents to affected parties. CC7.4.3
+Security incidents are reported to the Incident Response Team (IRT) and tracked through to resolution in a ticketing system. Inspected the incident ticket details for a sample of security incidents during the examination period to verify that security incidents were tracked to resolution. CC7.4.4
+Continuous penetration testing is performed by an independent third-party vendor. Third-party reports are obtained identifying the findings and resolutions. If applicable, a remediation plan is developed and changes are tracked to implementation to remediate critical and high findings, at a minimum, identified during the ongoing penetration tests. Inspected the third-party penetration testing reports for the examination period to verify that continuous penetration testing was performed. Inspected the third-party penetration testing reports for the examination period and remediation plans and tickets, where applicable, to verify that remediation plans were created for high or critical findings and changes were tracked through implementation, as applicable. CC7.5 - The entity identifies, develops, and implements activities to recover from identified security incidents. CC7.5.1
+Incident response procedures are in place to restore affected environments to functional operation by rebuilding systems, updating software, installing patches, and changing configurations, as needed. Inspected the Incident Response Plan to verify that restoration procedures were outlined. 47
+Test Results
+No exceptions noted. No exceptions noted. No exceptions noted. No exceptions noted. No exceptions noted.
+
+Ref. #
+CC7.5.2
+CC7.5.3
+CC7.5.4
+Client Controls
+As part of the annual risk assessment, management identifies controls that have been designed and operated to address risks. When the need for new controls is identified, management develops the requirements for the new controls and uses the change management process to implement them. For security incidents, a root cause analysis is prepared by the IRT and changes to the Company’s risk management data is updated to reflect the planned incident and problem resolution, as applicable. Disaster Recovery Plans are tested annually. Test results are reviewed and the contingency plan is adjusted as necessary. Tests of Controls
+Inspected the annual risk assessment to verify that management established controls to mitigate risks identified. Inspected the root cause analysis documentation for a sample of security incidents during the examination period to verify that a root cause analysis was prepared by the IRT and changes to the Company’s risk management data was updated to reflect the planned incident and problem resolution, as applicable. Inspected the Disaster Recovery Plan to verify it was current and updates were tracked. Inspected the 2022 disaster recovery plan testing report to verify that testing was performed annually and any remediation items were addressed, if applicable. 48
+Test Results
+Exception noted: The annual risk assessment was not performed in 2021. The risk assessment performed in 2022 was subsequent to the examination period. No exceptions noted. No exceptions noted. No exceptions noted.
+
+CC8.0 CONTROL ACTIVITIES – CHANGE MANAGEMENT
+Ref. #
+Client Controls
+Tests of Controls
+Test Results
+CC8.1 - The entity authorizes, designs, develops or acquires, configures, documents, tests, approves, and implements changes to infrastructure, data, software, and procedures to meet its objectives. CC8.1.1
+The Software Development Lifecycle Policy establishes a methodology for managing system changes throughout the lifecycle that governs the development, acquisition, implementation and maintenance of information systems. Inspected the Software Development Lifecycle Policy to verify that it addressed the development, acquisition, implementation and maintenance of information systems. No exceptions noted. CC8.1.2
+A ticketing system is established to track system changes from initiation through deployment, logging activities throughout the process. Inspected the ticketing system configuration to verify that system changes were tracked from initiation to completion, logging activities throughout the process. No exceptions noted. CC8.1.3
+Changes to the 1Password application (including database configurations) are tested in a segregated environment prior to system implementation.
+</index_2>
+<index_3>
+Filename: 1Pswd-2022-SOC2TypeII.pdf
+CC6.8.1
+System configurations require all data transmitted to be encrypted while at rest. Inspected the AWS database configuration to verify that snapshot backups were encrypted. No exceptions noted. CC6.8.2
+Anti-virus software is installed on all Company managed workstations. Inspected the anti-virus software configuration on the Company managed workstation to verify that anti-virus software was installed. No exceptions noted. CC6.8.3
+For non-Company managed workstations, the disabling of the operating system malware detection is prohibited by policy. Inspected the Security Manual to verify that the disabling of the operating systems malware detection was prohibited. No exceptions noted. 44
+
+CC7.0 CONTROL ACTIVITIES – SYSTEM OPERATIONS
+Ref. #
+Client Controls
+Tests of Controls
+CC7.1 - To meet its objectives, the entity uses detection and monitoring procedures to identify (1) changes to configurations that result in the introduction of new vulnerabilities, and (2) susceptibilities to newly discovered vulnerabilities. CC7.1.1
+IT operations monitors critical systems for performance, security threats, changing resource utilization needs, and unusual system activity. Errors are logged and alerts are generated to notify IT staff when conditions exceed defined threshold settings. Administrator access to monitoring systems is restricted to authorized individuals. Inspected the monitoring system configurations to verify that performance, security threats, changing resource utilization needs and unusual system activity were monitored for critical systems. Inspected the monitoring system configurations to verify that alerting and logging was enabled to notify IT staff when conditions exceed defined threshold settings. Inspected the system-generated user lists and inquired with management to verify that monitoring system administrator access was restricted to authorized individuals. CC7.1.2
+Continuous penetration testing is performed by an independent third-party vendor. Third-party reports are obtained identifying the findings and resolutions. If applicable, a remediation plan is developed and changes are tracked to implementation to remediate critical and high findings, at a minimum, identified during the ongoing penetration tests. Inspected the third-party penetration testing reports for the examination period to verify that continuous penetration testing was performed. Inspected the third-party penetration testing reports for the examination period and remediation plans and tickets, where applicable, to verify that remediation plans were created for high or critical findings and changes were tracked through implementation, as applicable. 45
+Test Results
+No exceptions noted. No exceptions noted. No exceptions noted. No exceptions noted. No exceptions noted.
+
+Ref. #
+Client Controls
+Tests of Controls
+Test Results
+CC7.2 - The entity monitors system components and the operation of those components for anomalies that are indicative of malicious acts, natural disasters, and errors affecting the entity's ability to meet its objectives; anomalies are analyzed to determine whether they represent security events. CC7.2.1
+Customer responsibilities, which include responsibility for reporting operational failures, incidents, problems, security breach, concerns and complaints, and the process for doing so, are described on the customer-facing website. Inspected the Terms of Service available on the customer- facing website to verify that customer responsibilities were made available to external users. No exceptions noted. CC7.2.2
+Security incidents are reported to the Incident Response Team (IRT) and tracked through to resolution in a ticketing system. Inspected the incident ticket details for a sample of security incidents during the examination period to verify that security incidents were tracked to resolution. No exceptions noted. CC7.3 - The entity evaluates security events to determine whether they could or have resulted in a failure of the entity to meet its objectives (security incidents) and, if so, takes actions to prevent or address such failures. CC7.3.1
+An Incident Response Plan is established to define the resolution and escalating of reported events. Inspected the Incident Response Policy to verify that it established defined protocols for resolving and escalating reported events. No exceptions noted. CC7.3.2
+IRT personnel follow defined protocols for evaluating and escalating reported events. Inspected the incident ticket details for a sample of security incidents during the examination period to verify that reported events were investigated in accordance with defined protocols for resolution. No exceptions noted. CC7.4 - The entity responds to identified security incidents by executing a defined incident response program to understand, contain, remediate, and communicate security incidents, as appropriate. CC7.4.1 Management has established defined roles and
+Inspected the job descriptions for key managers to verify that roles and responsibilities were defined, including duties such as proper oversight, management, and monitoring activities related to incident response. No exceptions noted. responsibilities to oversee the implementation of information security policies including incident response. 46
+
+Ref. #
+Client Controls
+Tests of Controls
+CC7.4.2
+An Incident Response Plan is established to define the resolution and escalating of reported events to include that procedures are in place to contain security incidents, mitigate effects of ongoing security incidents, restore operations to an interim state and communicate security incidents to affected parties. Inspected the Incident Response Plan to verify that it established defined protocols for resolving and escalating reported events to include that procedures are in place to contain security incidents, mitigate effects of ongoing security incidents, restore operations to an interim state and communicate security incidents to affected parties. CC7.4.3
+Security incidents are reported to the Incident Response Team (IRT) and tracked through to resolution in a ticketing system. Inspected the incident ticket details for a sample of security incidents during the examination period to verify that security incidents were tracked to resolution. CC7.4.4
+Continuous penetration testing is performed by an independent third-party vendor. Third-party reports are obtained identifying the findings and resolutions. If applicable, a remediation plan is developed and changes are tracked to implementation to remediate critical and high findings, at a minimum, identified during the ongoing penetration tests. Inspected the third-party penetration testing reports for the examination period to verify that continuous penetration testing was performed. Inspected the third-party penetration testing reports for the examination period and remediation plans and tickets, where applicable, to verify that remediation plans were created for high or critical findings and changes were tracked through implementation, as applicable. CC7.5 - The entity identifies, develops, and implements activities to recover from identified security incidents. CC7.5.1
+Incident response procedures are in place to restore affected environments to functional operation by rebuilding systems, updating software, installing patches, and changing configurations, as needed. Inspected the Incident Response Plan to verify that restoration procedures were outlined. 47
+Test Results
+No exceptions noted. No exceptions noted. No exceptions noted. No exceptions noted. No exceptions noted.
+
+Ref. #
+CC7.5.2
+CC7.5.3
+CC7.5.4
+Client Controls
+As part of the annual risk assessment, management identifies controls that have been designed and operated to address risks. When the need for new controls is identified, management develops the requirements for the new controls and uses the change management process to implement them. For security incidents, a root cause analysis is prepared by the IRT and changes to the Company’s risk management data is updated to reflect the planned incident and problem resolution, as applicable. Disaster Recovery Plans are tested annually. Test results are reviewed and the contingency plan is adjusted as necessary. Tests of Controls
+Inspected the annual risk assessment to verify that management established controls to mitigate risks identified. Inspected the root cause analysis documentation for a sample of security incidents during the examination period to verify that a root cause analysis was prepared by the IRT and changes to the Company’s risk management data was updated to reflect the planned incident and problem resolution, as applicable. Inspected the Disaster Recovery Plan to verify it was current and updates were tracked. Inspected the 2022 disaster recovery plan testing report to verify that testing was performed annually and any remediation items were addressed, if applicable. 48
+Test Results
+Exception noted: The annual risk assessment was not performed in 2021. The risk assessment performed in 2022 was subsequent to the examination period. No exceptions noted. No exceptions noted. No exceptions noted.
+
+CC8.0 CONTROL ACTIVITIES – CHANGE MANAGEMENT
+Ref. #
+Client Controls
+Tests of Controls
+Test Results
+CC8.1 - The entity authorizes, designs, develops or acquires, configures, documents, tests, approves, and implements changes to infrastructure, data, software, and procedures to meet its objectives. CC8.1.1
+The Software Development Lifecycle Policy establishes a methodology for managing system changes throughout the lifecycle that governs the development, acquisition, implementation and maintenance of information systems. Inspected the Software Development Lifecycle Policy to verify that it addressed the development, acquisition, implementation and maintenance of information systems. No exceptions noted. CC8.1.2
+A ticketing system is established to track system changes from initiation through deployment, logging activities throughout the process. Inspected the ticketing system configuration to verify that system changes were tracked from initiation to completion, logging activities throughout the process. No exceptions noted. CC8.1.3
+Changes to the 1Password application (including database configurations) are tested in a segregated environment prior to system implementation.
+</index_3>
+<index_4>
+Filename: 1Pswd-2022-SOC2TypeII.pdf
+Inspected the security training simulation to verify security awareness topics were covered during training. Inspected the training acknowledgement for a sample of new hires during the examination period to verify that management monitored training as part of the onboarding process. Per inspection of the July 2022 security training announcement and instructions, the annual training occurred subsequent to the examination period; therefore, no testing of the annual security training was performed. 29
+Test Results
+Exceptions noted: For 3 of 53 active personnel sampled, performance evaluations were not conducted. No exceptions noted. No exceptions noted. No testing performed.
+
+CC2.0 COMMUNICATION AND INFORMATION
+Ref. #
+Client Controls
+Tests of Controls
+CC2.1 - The entity obtains or generates and uses relevant, quality information to support the functioning of internal control. Inspected the policies and procedures to verify that AgileBits CC2.1.1 maintained policies and procedures outlining operating practices and business conduct for personnel that were reviewed annually. AgileBits maintains established policies and procedures, which outline operating practices and business conduct for personnel. Policies and procedures are reviewed annually. The policies and procedures include the following:
+• Security Manual • Software Development Lifecycle (SDLC) • Disaster Recovery Plan • Risk Assessment Policy
+Incident Response Plan
+CC2.1.2
+On an annual basis, management meets to assess the strategic plan, which identifies the information required and expected to support the internal control and achievement of service commitments and system requirements. Inspected the meeting minutes to verify that management met annually to assess the strategic plan, budget, and achievement of service commitments and system requirements. CC2.2 - The entity internally communicates information, including objectives and responsibilities for internal control, necessary to support the functioning of internal control. CC2.2.1
+Policy and procedure documents for significant processes that address system requirements for incident response and designing, developing, implementing, operating, maintaining, and monitoring controls are provided to personnel via the intranet to carry out their responsibilities. Inspected the intranet to verify that policies and procedures were in place for significant processes and available to internal users. Inspected the policies and procedures to verify that significant processes were considered that address system requirements. 30
+Test Results
+No exceptions noted. No exceptions noted. No exceptions noted. No exceptions noted.
+
+Ref. #
+Client Controls
+CC2.2.2
+Personnel are required to read and accept the Security Manual upon hire and annually thereafter. CC2.2.3 Management meets annually to discuss Company
+objectives and performance towards those objectives. CC2.2.4
+Changes to Company objectives are communicated to personnel through annual employee meetings. CC2.2.5 Management establishes continued training and
+monitors completion of security training programs upon hire and at least annually. CC2.2.6
+System changes are communicated to system users via the Company’s Twitter account. Tests of Controls
+Inspected the signed acknowledgements for a sample of new hires during the examination period to verify the Security Manual was communicated and acknowledged upon hire. Inspected the signed acknowledgements for a sample of sample of active personnel during the examination period to verify the Security Manual was communicated and acknowledged annually. Inspected the meeting minutes to verify that management met annually to discuss Company objectives and performance towards those objectives. Inspected the annual employee meeting video to verify that changes to Company objectives were communicated to personnel. Inspected the security training simulation to verify security awareness topics were covered during training. Inspected the training acknowledgement for a sample of new hires during the examination period to verify that management monitored training as part of the onboarding process. Per inspection of the July 2022 security training announcement and instructions, the annual training occurred subsequent to the examination period; therefore, no testing of the annual security training was performed. Inspected the Company’s Twitter account to verify that system changes were communicated to System users. 31
+Test Results
+No exceptions noted. Exceptions noted: The Security Manual was not communicated and acknowledged annually. No exceptions noted. No exceptions noted. No exceptions noted. No exceptions noted. No testing performed. No exceptions noted.
+
+Ref. #
+Client Controls
+Tests of Controls
+CC2.3 - The entity communicates with external parties regarding matters affecting the functioning of internal control. CC2.3.1
+The Company posts contact information on its website for customers and other external users to communicate relevant information to management. Inspected the customer-facing website to verify that contact information was available to external users. CC2.3.2
+System changes are communicated to system users via the Company’s Twitter account. Inspected the Company’s Twitter account to verify that system changes were communicated to System users. CC2.3.3
+A system description is documented and made available to external users of the system that includes a description of the entity organization structure, system support functions, processes, and organizational roles and responsibilities, and incident reporting via the Company’s customer- facing website. The description delineates the boundaries of the system and system processes that include infrastructure, software, people, processes and procedures, data, and contact information. Inspected the Terms of Service available on the customer- facing website to verify that the system description was made available to external users. 32
+Test Results
+No exceptions noted. No exceptions noted. No exceptions noted.
+
+CC3.0 RISK ASSESSMENT
+Ref. #
+Client Controls
+Tests of Controls
+Test Results
+CC3.1 - The entity specifies objectives with sufficient clarity to enable the identification and assessment of risks relating to objectives. CC3.1.1
+A documented risk management program is in place that includes guidance on the identification of potential threats, rating the significance of the risks associated with the identified threats, and mitigation strategies for those risks. Inspected the Risk Assessment Policy to verify that a program was established for the identification of potential threats, rating the significance of the risks associated with the identified threats, and mitigation strategies for those risks. No exceptions noted. CC3.1.2 Management performs an annual risk assessment, based on the objectives established by management. The objectives incorporate the relevant service commitments and system requirements. Inspected the annual risk assessment to verify that the risk assessment included consideration of business objectives, relevant service commitments, and system requirements. Exception noted: The annual risk assessment was not performed in 2021. The risk assessment performed in 2022 was subsequent to the examination period. CC3.2 - The entity identifies risks to the achievement of its objectives across the entity and analyzes risks as a basis for determining how the risks should be managed. CC3.2.1 Management performs an annual risk assessment
+Inspected the annual risk assessment to verify that risks, threats, and changes were identified and assessed. Exception noted: The annual risk assessment was not performed in 2021.
+that includes the following:
+Determining business objectives. • Involving appropriate levels of management. Analyzing risks associated with the threats. • Identifying threats to operations, including security threats, using information technology asset records. Considers the significance of the risks. • Determining a risk mitigation strategy. The risk assessment performed in 2022 was subsequent to the examination period. 33
+
+Ref. #
+Client Controls
+Tests of Controls
+CC3.2.2
+On an annual basis, the master asset listing is reviewed by management for completeness and accuracy. Inspected the master list review to verify system components were tracked and reviewed by management annually. CC3.3 - The entity considers the potential for fraud in assessing risks to the achievement of objectives. CC3.3.1 Management conducts a fraud risk assessment as part of the annual risk assessment to identify the various ways that fraud and misconduct can occur. Inspected the risk assessment documentation to verify management evaluated and assessed fraud risks as part of the annual risk assessment. CC3.4 - The entity identifies and assesses changes that could significantly impact the system of internal control. CC3.4.1 Management performs an annual risk assessment
+Inspected the annual risk assessment to verify that risks, threats, and changes were identified and assessed. that evaluates:
+changes in the regulatory, economic, physical, and business environment, including industry, competitors, and consumers the potential impact of new business lines, dramatically altered business lines, or divested business operations, rapid growth, changing reliance on foreign geographies, and new technologies
+
+management and their respective attitudes and philosophies on the system of internal control
+changes in technology • vendor and business partner relationships
+34
+Test Results
+No exceptions noted. Exception noted: The annual risk assessment was not performed in 2021. The risk assessment performed in 2022 was subsequent to the examination period. Exception noted: The annual risk assessment was not performed in 2021. The risk assessment performed in 2022 was subsequent to the examination period.
+
+CC4.0 MONITORING ACTIVITIES
+Ref. #
+Client Controls
+Tests of Controls
+Test Results
+CC4.1 - The entity selects, develops, and performs ongoing and/or separate evaluations to ascertain whether the components of internal control are present and functioning. CC4.1.1 Management performs an annual risk assessment, based on the objectives established by management. The objectives incorporate the relevant service commitments and system requirements. Inspected the annual risk assessment to verify that the risk assessment included consideration of business objectives, relevant service commitments, and system requirements. Exception noted: The annual risk assessment was not performed in 2021. The risk assessment performed in 2022 was subsequent to the examination period. CC4.1.2
+Continuous penetration testing is performed by an independent third-party vendor. Third-party reports are obtained identifying the findings and resolutions. Inspected the third-party penetration testing reports for the examination period to verify that continuous penetration testing was performed. No exceptions noted. CC4.1.3 Management obtains and reviews SOC reports for
+subservice organizations on an annual basis. Inspected management’s 2022 SOC review to verify that management obtained and reviewed the current AWS SOC report on an annual basis. No exceptions noted. 35
+
+Ref. #
+Client Controls
+Tests of Controls
+Test Results
+CC4.2 - The entity evaluates and communicates internal control deficiencies in a timely manner to those parties responsible for taking corrective action, including senior management and the board of directors, as appropriate. CC4.2.1
+Exception noted: The annual risk assessment was not performed in 2021. As part of the annual risk assessment, management identifies controls that have been designed and operated to address risks. When the need for new controls is identified, management develops the requirements for the new controls and uses the change management process to implement them. Inspected the annual risk assessment to verify that management established controls to mitigate risks identified. The risk assessment performed in 2022 was subsequent to the examination period. CC4.2.2
+If applicable, a remediation plan is developed and changes are tracked to implementation to remediate critical and high findings, at a minimum, identified during the ongoing penetration tests. Inspected the third-party penetration testing reports for the examination period and remediation plans and tickets, where applicable, to verify that remediation plans were created for high or critical findings and changes were tracked through implementation, as applicable. No exceptions noted. 36
+
+CC5.0 CONTROL ACTIVITIES
+Ref. #
+Client Controls
+Tests of Controls
+Test Results
+CC5.1 - The entity selects and develops control activities that contribute to the mitigation of risks to the achievement of objectives to acceptable levels. CC5.1.1
+Policies and procedures related to risk management are developed, implemented, and reviewed annually. Inspected the Risk Assessment Policy to verify it outlined policies and procedures to implement its risk mitigation strategy, reassess the suitability of the design, and implementation of control activities based on the operation and monitoring of those activities, and it was reviewed annually. No exceptions noted. CC5.1.2
+As part of the annual risk assessment, management identifies controls that have been designed and operated to address risks. When the need for new controls is identified, management develops the requirements for the new controls and uses the change management process to implement them. Inspected the annual risk assessment to verify that management established controls to mitigate risks identified. Exception noted: The annual risk assessment was not performed in 2021. The risk assessment performed in 2022 was subsequent to the examination period. CC5.2 - The entity also selects and develops general control activities over technology to support the achievement of objectives. CC5.2.1
+AgileBits maintains established policies and procedures, which outline operating practices and business conduct for personnel. Policies and procedures are reviewed annually. Inspected the policies and procedures to verify that AgileBits maintained policies and procedures outlining operating practices and business conduct for personnel that were reviewed annually. No exceptions noted. The policies and procedures include the following:
+• Security Manual • Software Development Lifecycle (SDLC) • Disaster Recovery Plan • Risk Assessment Policy
+Incident Response Plan
+37
+
+Ref. #
+Client Controls
+Tests of Controls
+CC5.3 - The entity deploys control activities through policies that establish what is expected and in procedures that put policies into action. CC5.3.1
+Roles and responsibilities of key managers are defined in written job descriptions, including duties such as proper oversight, management, and monitoring of vendor, security and availability activities. Inspected the job descriptions for key managers to verify that roles and responsibilities were defined, including duties such as proper oversight, management, and monitoring activities. CC5.3.2
+The Security Manual is available to personnel via the intranet. Inspected the intranet to verify that the Security Manual was posted and available to personnel. CC5.3.3
+Personnel are required to read and accept the Security Manual upon hire and annually thereafter. Inspected the signed acknowledgements for a sample of new hires during the examination period to verify the Security Manual was communicated and acknowledged upon hire. Inspected the signed acknowledgements for a sample of sample of active personnel during the examination period to verify the Security Manual was communicated and acknowledged annually. CC5.3.4
+Active personnel’s abilities to meet job requirements are evaluated as part of the annual performance review process. Inspected the performance evaluations for a sample of active personnel during the examination period to verify that personnel were evaluated annually. 38
+Test Results
+No exceptions noted. No exceptions noted. No exceptions noted. Exceptions noted: The Security Manual was not communicated and acknowledged annually. Exceptions noted: For 3 of 53 active personnel sampled, performance evaluations were not conducted.
+
+Ref. #
+CC5.3.5
+Client Controls
+AgileBits maintains established policies and procedures, which outline operating practices and business conduct for personnel. Policies and procedures are reviewed annually.
+</index_4>
+<index_5>
+Filename: 1Pswd-2022-SOC2TypeII.pdf
+Know who has access to shared vaults. Review the users in each shared vault to avoid
+inadvertently sharing data with individuals who should not have the data. Keep personal accounts private. For 1Password Teams customers, store personal data like home
+banking and personal email passwords in a vault that isn't part of the team. Use strong, unique passwords everywhere. Using repetitive passwords and password reuse can
+create risk in the event that a single instance of the password is compromised. Use Watchtower to find passwords that need to be changed. Watchtower informs users about
+accounts they have at sites that have been revealed publicly to have been breached. Administrators should:
+Add at least one additional administrator. Administrators cannot recover their own accounts, so it is important to have someone else who can help if they get locked out. Attention should also be paid to ensuring administrator access to accounts is selective and judicious. Limit access to vaults. An unlimited number of vaults can be created, so additional vaults can be
+used to ensure division of information. Limit permissions within vaults. When available, take appropriate safeguards using custom vault
+permissions to ensure unnecessary access is not granted to users. 55
+
+Turn on Travel Mode when crossing borders. Define which vaults are “Safe” for travel, and
+enable and disable Travel Mode as users’ cross borders or are in other risky situations. Verify recovery requests. If an email account is compromised, an illegitimate recovery request could give the attacker access to their account. Out of band verification can help prevent unauthorized access. Make sure to remove people who don't belong. Suspend or delete accounts that are no longer
+needed, for example when an employee departs. MANAGEMENT RESPONSES TO EXCEPTIONS
+Management’s response to the exceptions identified:
+The exceptions noted were a result of continued growth of the Company. During this period of growth, communication regarding specific internal processes was not distributed and enforced properly, resulting in said controls not being completed thoroughly and effectively during the examination period. These items related to the exceptions are being reworked to ensure procedures are fulfilled and controls can have adequate evidence provided. CC1.4.2, CC1.5.1, and CC5.3.4 – annual employee evaluations – processes will be implemented to ensure all annual employee evaluations fulfill requirements according to internal policy, including manager and employee signatures, by Q4 of 2022. These policies will be used during the 2022 annual evaluation. CC2.2.2 and CC5.3.3 – Security Manual acknowledgement – automated processes for the annual acknowledgement of the Security Manual by all staff will be implemented in Q4 of 2022. These processes will be used for the 2022 annual Security Manual acknowledgement. CC3.1.2, CC3.2.1, CC3.3.1, CC3.4.1, CC4.1.1, CC4.2.1, CC5.1.2, CC7.5.2, CC8.1.8, and CC9.1.2 – risk assessment – our risk assessment process and policy has been reworked to include additional factors, and ensure testing is completed within each year. The new process will be implemented Q1 of 2023. These processes will be used for the 2023 risk assessment. We believe our adjustments to these controls will be effective in meeting both the spirit and letter of these controls, and we do not anticipate further exceptions in the future due to our improvements. 56
+</index_5>
+<index_6>
+Filename: 1Pswd-2022-SOC2TypeII.pdf
+CC8.1.3
+Changes to the 1Password application (including database configurations) are tested in a segregated environment prior to system implementation. Inspected the implementation tickets for a sample of releases to the 1Password application (including database configurations) during the examination period to verify that changes were tested prior to system implementation. No exceptions noted. Inspected the system infrastructure to verify that separate development, test, and production environments existed. No exceptions noted. CC8.1.4
+Changes to the 1Password application (including database configurations) are reviewed and approved by management prior to implementation. Inspected the implementation tickets for a sample of releases to the 1Password application (including database configurations) during the examination period to verify that management approval occurred prior to implementation. No exceptions noted. CC8.1.5
+Access to move changes to production is authorized and restricted to appropriate individuals to enforce segregation of duties. Inspected the system-generated user list for the AWS environment and inquired with management to verify that administrator access (required to push code to production) was restricted to appropriate and authorized individuals. No exceptions noted. 49
+
+Ref. #
+CC8.1.6
+CC8.1.7
+CC8.1.8
+Client Controls
+The source code management software, utilized for version control of development projects and to control access to source code libraries, is configured to require a separate approval to merge code to the master branch. Administrator access to the source code management software is restricted to appropriate and authorized personnel. Changes to infrastructure are approved by management prior to implementation. As part of the annual risk assessment, management identifies controls that have been designed and operated to address risks. When the need for new controls is identified, management develops the requirements for the new controls and uses the change management process to implement them. Tests of Controls
+Inspected the source code management software configurations to verify that the software required a separate approval prior to merging code with the master branch for production, managed version control of development projects, and controlled access to source code libraries. Inspected the system-generated user list and inquired with management to verify that source code management software administrator access was restricted to appropriate and authorized personnel. Inspected the implementation ticket details for a sample of infrastructure changes during the examination period to verify they were approved by management prior to implementation. Inspected the annual risk assessment to verify that management established controls to mitigate risks identified. 50
+Test Results
+No exceptions noted. No exceptions noted. No exceptions noted. Exception noted: The annual risk assessment was not performed in 2021. The risk assessment performed in 2022 was subsequent to the examination period.
+
+CC9.0 RISK MITIGATION
+Ref. #
+Client Controls
+Tests of Controls
+CC9.1 - The entity identifies, selects, and develops risk mitigation activities for risks arising from potential business disruptions. CC9.1.1
+A documented risk management program is in place that includes guidance on the identification of potential threats, rating the significance of the risks associated with the identified threats, and mitigation strategies for those risks. Inspected the Risk Assessment Policy to verify that a program was established for the identification of potential threats, rating the significance of the risks associated with the identified threats, and mitigation strategies for those risks. CC9.1.2 Management performs an annual risk assessment
+that includes the following:
+Inspected the annual risk assessment to verify that risks, threats, and changes were identified and assessed. Determining business objectives. • Involving appropriate levels of management. Analyzing risks associated with the threats. • Identifying threats to operations, including security threats, using information technology asset records. Considers the significance of the risks. • Determining a risk mitigation strategy. CC9.2 - The entity assesses and manages risks associated with vendors and business partners. CC9.2.1
+A vendor security and risk assessment is performed as part of a due diligence review when considering a new vendor. Per inspection of system evidence and configurations and inquiry with management, there were no new vendors during the examination period; therefore, no testing of vendor due diligence was performed. CC9.2.2 Management has defined roles and responsibilities
+to oversee the management of risks associated with vendors and business partners. Inspected the job descriptions to verify that responsibility for management of vendors and business partners was assigned. CC9.2.3 Management obtains and reviews SOC reports for
+subservice organizations on an annual basis. Inspected management’s 2022 SOC review to verify that management obtained and reviewed the current AWS SOC report on an annual basis. 51
+Test Results
+No exceptions noted. Exception noted: The annual risk assessment was not performed in 2021. The risk assessment performed in 2022 was subsequent to the examination period. No testing performed. No exceptions noted. No exceptions noted.
+
+ADDITIONAL CRITERIA FOR AVAILABILITY
+Ref. #
+Client Controls
+Tests of Controls
+Test Results
+A1.1 - The entity maintains, monitors, and evaluates current processing capacity and use of system components (infrastructure, data, and software) to manage capacity demand and to enable the implementation of additional capacity to help meet its objectives. A1.1.1
+IT operations monitors critical systems for performance, security threats, changing resource utilization needs, and unusual system activity. Errors are logged and alerts are generated to notify IT staff when conditions exceed defined threshold settings. Administrator access to monitoring systems is restricted to authorized individuals. Inspected the monitoring system configurations to verify that performance, security threats, changing resource utilization needs and unusual system activity were monitored for critical systems. No exceptions noted. Inspected the monitoring system configurations to verify that alerting and logging was enabled to notify IT staff when conditions exceed defined threshold settings. No exceptions noted. Inspected the system-generated user lists and inquired with management to verify that monitoring system administrator access was restricted to authorized individuals. No exception noted.
+</index_6>
+<index_7>
+Filename: 1Pswd-2022-SOC2TypeII.pdf
+Inspected the system-generated user list for the AWS environment and inquired with management to verify that administrator access (required to push code to production) was restricted to appropriate and authorized individuals. No exceptions noted. 49
+
+Ref. #
+CC8.1.6
+CC8.1.7
+CC8.1.8
+Client Controls
+The source code management software, utilized for version control of development projects and to control access to source code libraries, is configured to require a separate approval to merge code to the master branch. Administrator access to the source code management software is restricted to appropriate and authorized personnel. Changes to infrastructure are approved by management prior to implementation. As part of the annual risk assessment, management identifies controls that have been designed and operated to address risks. When the need for new controls is identified, management develops the requirements for the new controls and uses the change management process to implement them. Tests of Controls
+Inspected the source code management software configurations to verify that the software required a separate approval prior to merging code with the master branch for production, managed version control of development projects, and controlled access to source code libraries. Inspected the system-generated user list and inquired with management to verify that source code management software administrator access was restricted to appropriate and authorized personnel. Inspected the implementation ticket details for a sample of infrastructure changes during the examination period to verify they were approved by management prior to implementation. Inspected the annual risk assessment to verify that management established controls to mitigate risks identified. 50
+Test Results
+No exceptions noted. No exceptions noted. No exceptions noted. Exception noted: The annual risk assessment was not performed in 2021. The risk assessment performed in 2022 was subsequent to the examination period.
+
+CC9.0 RISK MITIGATION
+Ref. #
+Client Controls
+Tests of Controls
+CC9.1 - The entity identifies, selects, and develops risk mitigation activities for risks arising from potential business disruptions. CC9.1.1
+A documented risk management program is in place that includes guidance on the identification of potential threats, rating the significance of the risks associated with the identified threats, and mitigation strategies for those risks. Inspected the Risk Assessment Policy to verify that a program was established for the identification of potential threats, rating the significance of the risks associated with the identified threats, and mitigation strategies for those risks. CC9.1.2 Management performs an annual risk assessment
+that includes the following:
+Inspected the annual risk assessment to verify that risks, threats, and changes were identified and assessed. Determining business objectives. • Involving appropriate levels of management. Analyzing risks associated with the threats. • Identifying threats to operations, including security threats, using information technology asset records. Considers the significance of the risks. • Determining a risk mitigation strategy. CC9.2 - The entity assesses and manages risks associated with vendors and business partners. CC9.2.1
+A vendor security and risk assessment is performed as part of a due diligence review when considering a new vendor. Per inspection of system evidence and configurations and inquiry with management, there were no new vendors during the examination period; therefore, no testing of vendor due diligence was performed. CC9.2.2 Management has defined roles and responsibilities
+to oversee the management of risks associated with vendors and business partners. Inspected the job descriptions to verify that responsibility for management of vendors and business partners was assigned. CC9.2.3 Management obtains and reviews SOC reports for
+subservice organizations on an annual basis. Inspected management’s 2022 SOC review to verify that management obtained and reviewed the current AWS SOC report on an annual basis. 51
+Test Results
+No exceptions noted. Exception noted: The annual risk assessment was not performed in 2021. The risk assessment performed in 2022 was subsequent to the examination period. No testing performed. No exceptions noted. No exceptions noted.
+
+ADDITIONAL CRITERIA FOR AVAILABILITY
+Ref. #
+Client Controls
+Tests of Controls
+Test Results
+A1.1 - The entity maintains, monitors, and evaluates current processing capacity and use of system components (infrastructure, data, and software) to manage capacity demand and to enable the implementation of additional capacity to help meet its objectives. A1.1.1
+IT operations monitors critical systems for performance, security threats, changing resource utilization needs, and unusual system activity. Errors are logged and alerts are generated to notify IT staff when conditions exceed defined threshold settings. Administrator access to monitoring systems is restricted to authorized individuals. Inspected the monitoring system configurations to verify that performance, security threats, changing resource utilization needs and unusual system activity were monitored for critical systems. No exceptions noted. Inspected the monitoring system configurations to verify that alerting and logging was enabled to notify IT staff when conditions exceed defined threshold settings. No exceptions noted. Inspected the system-generated user lists and inquired with management to verify that monitoring system administrator access was restricted to authorized individuals. No exception noted. A1.1.2
+The AWS environment is configured with multiple availability zones for redundancy. Inspected the AWS environment configurations to verify it was configured with multiple availability zones for redundancy. No exceptions noted. A1.2 - The entity authorizes, designs, develops or acquires, implements, operates, approves, maintains, and monitors environmental protections, software, data back-up processes, and recovery infrastructure to meet its objectives. A1.2.1
+A replication process is in place to perform real time replication between databases. Replication lag is monitored and notification alerts are sent to designated IT staff. Administrator access to AWS is restricted to authorized personnel. Inspected the database settings and monitoring configurations to verify that replication of databases was configured and alerts features were enabled. No exceptions noted. Inspected the system-generated list of AWS administrators and inquired with management to verify that administrator access was restricted to authorized personnel. No exceptions noted. 52
+
+Ref. #
+Client Controls
+Tests of Controls
+A1.2.2
+The AWS environment is configured with multiple availability zones for redundancy. Inspected the AWS environment configurations to verify it was configured with multiple availability zones for redundancy. A1.3 - The entity tests recovery plan procedures supporting system recovery to meet its objectives. A1.3.1
+Disaster Recovery Plans are tested annually. Test results are reviewed and the contingency plan is adjusted as necessary. Inspected the Disaster Recovery Plan to verify it was current and updates were tracked. Inspected the 2022 disaster recovery plan testing report to verify that testing was performed annually and any remediation items were addressed, if applicable. 53
+Test Results
+No exceptions noted. No exceptions noted. No exceptions noted.
+
+SECTION 5: OTHER INFORMATION PROVIDED BY AGILEBITS, INC.
+54
+
+OTHER INFORMATION PROVIDED BY AGILEBITS, INC. RECOMMENDED USER CONTROLS
+Each individual using 1Password should:
+Keep their Master Password a secret. Master Passwords should be known only to the individual end user. If the Master Password is known or disclosed to anyone else, including administrative or management staff, it should be changed immediately. Use a generated Master Password. Most human-created passwords are easy to guess. During setup, 1Password provides the option to locally and securely generate a memorable Master Password that is generally more secure than user-created Master Passwords. Generate, and store the Emergency Kit safely. Generate an Emergency Kit and store a copy of the Emergency Kit on a USB flash drive or print a copy and store it in a vault at home or safe deposit box — somewhere not online or accessible at work. The Emergency Kit contains at least the Secret Key of the specific user and should be controlled accordingly. Store all passwords in 1Password vaults. Data stored in other places is not afforded the same
+protection. Sticky notes, whiteboards, and notebooks are not safe places. Only sign in from trusted devices. Public computers are not as trustworthy as personal devices and workstations. Users should be sure to only sign in to their accounts from trusted computers. Do not email or message passwords. These are easily intercepted and read by others. Know who has access to shared vaults. Review the users in each shared vault to avoid
+inadvertently sharing data with individuals who should not have the data. Keep personal accounts private.
+</index_7>
+<index_8>
+Filename: 1Pswd-2022-SOC2TypeII.pdf
+The following table clarifies certain terms used in this section to describe the nature of the tests performed:
+Test Inquiry Observation Inspection Re-performance
+Description Inquiry of appropriate personnel and corroboration with management. Observation of the application, performance, or existence of the control. Inspection of documents and reports indicating performance of the control. Re-performance of the control. In addition, when using information produced (or provided) by the service organization, we evaluated whether the information was sufficiently reliable for our purposes by obtaining evidence about the accuracy and completeness of such information and evaluating whether the information was sufficiently precise and detailed for our purposes. 26
+
+COMMON CONTROL CRITERIA – SECURITY AND AVAILABILITY
+CC1.0 CONTROL ENVIRONMENT
+Ref. #
+Client Controls
+Tests of Controls
+Test Results
+CC1.1 - The entity demonstrates a commitment to integrity and ethical values. CC1.1.1
+AgileBits maintains an Employee Handbook, which includes established policies and procedures outlining operating practices and business conduct for personnel. The Employee Handbook is reviewed annually. Inspected the most recent version of the Employee Handbook to verify that it included policies and procedures outlining operating practices and business conduct for personnel and that it was reviewed annually. No exceptions noted. CC1.1.2
+Personnel are required to read and accept the Confidentiality and Intellectual Property Agreement and Employee Handbook upon hire. Inspected the signed acknowledgements and agreements for a sample of new hires during the examination period to verify that policies and procedures were communicated and acknowledged upon hire. No exceptions noted. CC1.2 - The board of directors demonstrates independence from management and exercises oversight of the development and performance of internal control. CC1.2.1
+AgileBits does not have an independent Board of Directors. The Directors exercise oversight of the development and performance of internal controls. Inspected the organizational chart to verify that the Directors exercised oversight of the development and performance of internal controls. No exceptions noted. CC1.3 - Management establishes, with board oversight, structures, reporting lines, and appropriate authorities and responsibilities in the pursuit of objectives.
+</index_8>
+<index_9>
+Filename: 1Pswd-2022-SOC2TypeII.pdf
+These procedures are executed by qualified and experienced Directors, the Development Team, the IT Team, and the Security Team. Procedures are in place in the following areas:
+Security Policy Administration: The Security Manual and related policies are reviewed at least annually by the Directors and the Security Team. The Security Manual consists of the following areas: data security, personnel security, data classification, incident response, password management, and network security. Risk Assessment: At least annually the Directors, Development, and IT Teams collaborate on
+an overall risk assessment for the Company and the System. Communication: The Company opportunistically and continually uses a mixture of cultural messaging, intranet services, an internal knowledgebase, email, and in-person meeting opportunities for the communication of security policies and procedures. Regular confirmation of this communication is captured in annual attestations from each team member that they have read general internal policies. Logical Access: Team members must have unique credentials as well as established information assets. Access to systems and authorization to access the Company’s information is restricted based on the responsibilities of the individual and their role. Change Management: The Company has a SDLC Policy. The policy covers the planning, assignment, development, design, code review, impact considerations, infrastructure assignments, quality assurance, security testing, implementation, and maintenance of both the System software and infrastructure. System Change Management
+The change management process has been established to provide a layer of protection for the Company by ensuring that every change performed is thoroughly discussed and is approved prior to migration to production. Changes to System configuration and infrastructure are managed as code through the same SDLC used to develop and deliver the System software. This process requires that a ticket must be filed for change requests, which then must be approved by a member of management. If approved, the infrastructure change will progress through the SDLC from approval to design and development, testing and review, and production release. Source control records are kept of the infrastructure orchestration code through this process. Availability
+System availability is maintained at a high level using multi-datacenter database and application server redundancy and load balancing.
+</index_9>
+<index_10>
+Filename: 1Pswd-2022-SOC2TypeII.pdf
+Thereafter, development activities include providing more challenging assignments, job rotation, training programs, seminars, and continuing education programs such as “bootcamps,” classes, and similar, run internally and by external organizations. Additionally, team members are reviewed regularly by their direct managers to monitor, develop, and provide counsel regarding competence, expertise, skill, and career advancement options. RISK ASSESSMENT PROCESS
+AgileBits has a cross-functional risk assessment process that utilizes management and staff expertise to identify risks that could affect AgileBits’ ability to meet its obligations to its customers. Risk assessment efforts include analyses of technical and non-technical threats, probabilities of occurrence, potential business impacts, and associated mitigation plans. Internal controls, policy, procedure, and peer review form the basis of risk mitigation, along with response based on severity, and team collaboration such as emergency bridges and code reviews. Exceptions or deferments are
+21
+
+to be documented and must be approved by management of the group which originates or monitors the control in question. Team leaders are required to identify significant risks related to their areas of responsibility and implement measures to mitigate those risks. Management meets regularly to identify risks and develop corrective steps to minimize the impact of these risks. The Company employs numerous methods to assess and manage risk, including documentation, policies, procedures, team structure, recurring meetings, and automated error detection controls. AgileBits strives to identify and prevent risks at an early stage through developing policy and procedure that conform to cultural and operational reality, maximizing the likelihood of compliance. Team members are instructed by general policy to relate suspected or confirmed risks to the Security Team for analysis, and mitigation as appropriate. Staff are instructed that when in doubt, a matter should be reported. CONTROL ACTIVITIES
+Control activities are the actions established by policies and procedures to help ensure that management directives to mitigate risks to the achievement of objectives are executed. Control activities are performed at all levels of the organization and at various stages within business processes, and over the technology environment. Trust Services Categories, Criteria, Related Controls, and Test of Controls
+The security and availability categories and applicable trust services criteria were used to evaluate the suitability of design and operating effectiveness of controls stated in the description. Criteria and controls designed, implemented, and operated to meet them ensure that the System:
+Security – is protected against unauthorized access (both physical and logical). • Availability – is available for operation and use. The Company’s trust services criteria and related control activities are included in Section 4 of this report to eliminate the redundancy that would result from listing them here in Section 3 and repeating them in Section 4. Although the trust services criteria and related control activities are included in Section 4, they are, nevertheless, an integral part of AgileBits’ description of controls. For specific criterion, which was deemed not relevant to the system, see Section 4 for related explanation.
+</index_10>
+<index_11>
+Filename: 1Pswd-2022-SOC2TypeII.pdf
+.......................................................................................................................................... 13 PRINCIPAL SERVICE COMMITMENTS AND 1PASSWORD SOLUTION REQUIREMENTS ........................................ 13 SCOPE OF THE DESCRIPTION .............................................................................................................................. 14 COMPONENTS OF THE SYSTEM USED TO PROVIDE THE SERVICES .................................................................... 14
+RELEVANT ASPECTS OF THE CONTROL ENVIRONMENT, RISK ASSESSMENT PROCESS, CONTROL ACTIVITIES, INFORMATION AND COMMUNICATION, AND MONITORING ............................................................................ 19 CONTROL ENVIRONMENT .............................................................................................................................. 19 RISK ASSESSMENT PROCESS ........................................................................................................................... 21 CONTROL ACTIVITIES ...................................................................................................................................... 22 INFORMATION AND COMMUNICATION ......................................................................................................... 22 MONITORING ................................................................................................................................................. 23 COMPLEMENTARY SUBSERVICE ORGANIZATION CONTROLS ............................................................................. 24 CHANGES TO THE SYSTEM DURING THE PERIOD ............................................................................................... 24 SYSTEM INCIDENTS DURING THE PERIOD........................................................................................................... 24 COMPLEMENTARY USER ENTITY CONTROLS ...................................................................................................... 24
+</index_11>
+<index_12>
+Filename: 1Pswd-2022-SOC2TypeII.pdf
+Inspected the security training simulation to verify security awareness topics were covered during training. Inspected the training acknowledgement for a sample of new hires during the examination period to verify that management monitored training as part of the onboarding process. Per inspection of the July 2022 security training announcement and instructions, the annual training occurred subsequent to the examination period; therefore, no testing of the annual security training was performed. 29
+Test Results
+Exceptions noted: For 3 of 53 active personnel sampled, performance evaluations were not conducted. No exceptions noted. No exceptions noted. No testing performed.
+
+CC2.0 COMMUNICATION AND INFORMATION
+Ref. #
+Client Controls
+Tests of Controls
+CC2.1 - The entity obtains or generates and uses relevant, quality information to support the functioning of internal control. Inspected the policies and procedures to verify that AgileBits CC2.1.1 maintained policies and procedures outlining operating practices and business conduct for personnel that were reviewed annually. AgileBits maintains established policies and procedures, which outline operating practices and business conduct for personnel. Policies and procedures are reviewed annually. The policies and procedures include the following:
+• Security Manual • Software Development Lifecycle (SDLC) • Disaster Recovery Plan • Risk Assessment Policy
+Incident Response Plan
+CC2.1.2
+On an annual basis, management meets to assess the strategic plan, which identifies the information required and expected to support the internal control and achievement of service commitments and system requirements. Inspected the meeting minutes to verify that management met annually to assess the strategic plan, budget, and achievement of service commitments and system requirements. CC2.2 - The entity internally communicates information, including objectives and responsibilities for internal control, necessary to support the functioning of internal control. CC2.2.1
+Policy and procedure documents for significant processes that address system requirements for incident response and designing, developing, implementing, operating, maintaining, and monitoring controls are provided to personnel via the intranet to carry out their responsibilities. Inspected the intranet to verify that policies and procedures were in place for significant processes and available to internal users. Inspected the policies and procedures to verify that significant processes were considered that address system requirements. 30
+Test Results
+No exceptions noted. No exceptions noted. No exceptions noted. No exceptions noted.
+
+Ref. #
+Client Controls
+CC2.2.2
+Personnel are required to read and accept the Security Manual upon hire and annually thereafter. CC2.2.3 Management meets annually to discuss Company
+objectives and performance towards those objectives. CC2.2.4
+Changes to Company objectives are communicated to personnel through annual employee meetings. CC2.2.5 Management establishes continued training and
+monitors completion of security training programs upon hire and at least annually. CC2.2.6
+System changes are communicated to system users via the Company’s Twitter account. Tests of Controls
+Inspected the signed acknowledgements for a sample of new hires during the examination period to verify the Security Manual was communicated and acknowledged upon hire.
+</index_12>
+
+</soc2_excerpts>
+
+<instructions>
+1. Deeply understand the SOC2 excerpts, paying special attention to sections containing management responses, corrective actions, or remediation plans.
+
+2. Find all management responses to exceptions. These typically appear as:
+   - **Management Response sections**: Dedicated sections labeled "Management's Response", "Management Response", or "Company Response"
+   - **Action plans**: Descriptions of corrective actions, remediation plans, or mitigation strategies
+   - **Status updates**: Information about implementation status or completion dates for corrective actions
+   - **Root cause analysis**: Management's explanation of why the exception occurred
+   - **Section 5 "Other Information"**: Unaudited section containing general management responses without specific criterion IDs
+
+3. Look for these indicators of management responses:
+   - Phrases like "Management's response", "Management has implemented", "The Company plans to", "Corrective action taken"
+   - Future-tense commitments: "will implement", "plans to address", "intends to remediate"
+   - Past-tense corrections: "has implemented", "completed", "remediated"
+   - Specific action items: process changes, policy updates, training initiatives, system enhancements
+
+4. Management responses may or may not have an associated Common Criteria ID (CCX.X format):
+   - If embedded in auditor test tables, the CC ID may appear in table headers (e.g., "CC2.3", "CC3.1")
+   - If in Section 5 (Other Information) or narrative text, there may be no explicit CC ID - set to null in these cases
+   - If multiple responses exist for the same CC ID, extract them as separate entries
+
+5. Extract the full response text as it appears in the document, preserving key details like:
+   - Specific actions being taken
+   - Timeline or completion dates mentioned
+   - Responsible parties if mentioned
+   - Implementation status
+
+6. For each management response, attempt to identify the page number(s) where it was found by examining the excerpt text itself.
+   - Page numbers may appear within the chunk text (e.g., "Page 15", "p. 18", headers/footers)
+   - Use format: single page "15", range "15-17", or multiple "15, 18"
+   - It's acceptable for page numbers to be null if not found - don't make them up
+
+7. ALWAYS call parse_soc2_management_responses - this is REQUIRED even when no management responses are found. Include page numbers where available.
+
+8. If no management responses are found, call the tool with empty `management_responses` and `relevant_excerpt_indices` arrays.
+</instructions>
+
+[
+    {
+        "name": "parse_soc2_management_responses",
+        "type": "object",
+        "title": "Parse SOC2 Management Responses",
+        "description": "Parses management responses from SOC2 reports and relevant indices",
+        "properties": {
+            "management_responses": {
+                "type": "array",
+                "description": "The management responses you extracted, empty if none are found. Management responses may or may not have associated Common Criteria IDs.",
+                "items": {
+                    "type": "object",
+                    "description": "An extracted management response. May have a Common Criteria ID if found in auditor test tables, or null if from Section 5 (Other Information) or other narrative sections.",
+                    "properties": {
+                        "common_criteria_id": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "The Common Criteria ID (e.g., CC6.1, CC7.2) that this management response addresses. Leave null if the response appears in Section 5 (Other Information) or elsewhere without an explicit CC ID."
+                        },
+                        "response_text": {
+                            "type": "string",
+                            "description": "The full text of management's response, corrective action, or remediation plan"
+                        },
+                        "page_number": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "Page number(s) where this management response was found. Leave null if not found."
+                        }
+                    },
+                    "required": [
+                        "common_criteria_id",
+                        "response_text",
+                        "page_number"
+                    ]
+                }
+            },
+            "relevant_excerpts_indices": {
+                "type": "array",
+                "description": "The indices you selected for the relevant excerpts supporting your found management responses",
+                "items": {
+                    "type": "string",
+                    "enum": [
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9",
+                        "10",
+                        "11",
+                        "12"
+                    ],
+                    "description": "An index of an excerpt supporting your found management responses, empty if none found1"
+                }
+            }
+        },
+        "required": [
+            "management_responses",
+            "relevant_excerpts_indices"
+        ]
+    }
+]

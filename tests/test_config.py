@@ -79,8 +79,8 @@ class TestCreateSessionConfig:
         result = create_session_config(
             plugin_root=temp_dir / "plugin",
             sections_dir=temp_dir / "sections",
-            implementation_dir=temp_dir / "impl",
-            git_available=True,
+            target_dir=temp_dir / "target",
+            state_dir=temp_dir / "state",
             git_root=temp_dir / "repo",
             commit_style="conventional",
             test_command="pytest"
@@ -88,34 +88,21 @@ class TestCreateSessionConfig:
 
         assert result["plugin_root"] == str(temp_dir / "plugin")
         assert result["sections_dir"] == str(temp_dir / "sections")
-        assert result["git_available"] is True
+        assert result["target_dir"] == str(temp_dir / "target")
+        assert result["state_dir"] == str(temp_dir / "state")
+        assert result["git_root"] == str(temp_dir / "repo")
         assert result["test_command"] == "pytest"
         assert "sections_state" in result
         assert result["sections_state"] == {}
         assert "created_at" in result
-
-    def test_create_config_no_git(self, temp_dir):
-        """Should create config without git."""
-        result = create_session_config(
-            plugin_root=temp_dir / "plugin",
-            sections_dir=temp_dir / "sections",
-            implementation_dir=temp_dir / "impl",
-            git_available=False,
-            git_root=None,
-            commit_style="unknown",
-            test_command="uv run pytest"
-        )
-
-        assert result["git_available"] is False
-        assert result["git_root"] is None
 
     def test_create_config_with_sections(self, temp_dir):
         """Should accept sections list."""
         result = create_session_config(
             plugin_root=temp_dir / "plugin",
             sections_dir=temp_dir / "sections",
-            implementation_dir=temp_dir / "impl",
-            git_available=True,
+            target_dir=temp_dir / "target",
+            state_dir=temp_dir / "state",
             git_root=temp_dir / "repo",
             commit_style="simple",
             test_command="pytest",

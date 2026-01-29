@@ -1,0 +1,10 @@
+ultrathink
+okay back to policy-to-control rules creation. I ran it over all 37 documents, here are the results:
+
+@ai_services/scripts/experiments/control_detection/files/experiments/template_policies/aggregated_patterns/universal_rules.md
+
+and
+
+@ai_services/scripts/experiments/control_detection/files/experiments/template_policies/aggregated_patterns/rare_rules.md
+
+Given that our goal is to teach a LLM how to detect/map a set of arbitrary controls to a policy document, What do you think?

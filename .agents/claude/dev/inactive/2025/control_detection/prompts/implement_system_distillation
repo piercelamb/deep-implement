@@ -1,0 +1,9 @@
+ultrathink
+
+Your task is to be the Senior GRC Auditor distilling the extensive technical document (system prompt) you wrote to teach a LLM how to map controls to policy documents. You created a plan to make key-tradeoffs to appropriately distill the system prompt.
+
+Read in the current system prompt: @.agents/claude/dev/active/control_detection/planning/1000_ft_prompt_refactor/distill/distilled_system.md
+
+Now read in your distillation plan: @.agents/claude/dev/active/control_detection/planning/1000_ft_prompt_refactor/distill/plan.md
+
+Create a TODO list to implement "### Area 6: Decision Criteria + Output Format (Current: Parts 5 & 6) - MERGED" but after you've created the todo list, perform the edits in a single edit to maintain coherence

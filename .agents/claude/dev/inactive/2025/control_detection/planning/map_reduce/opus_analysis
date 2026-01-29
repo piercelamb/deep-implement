@@ -1,0 +1,46 @@
+⏺ Looking at these outputs, here's my honest assessment:
+
+  What's Working Well
+
+  1. Genuine abstraction achieved
+  The patterns are truly meta-level "reasons why policies map to controls" - not policy-specific details. They capture the reasoning taxonomy you were after.
+
+  2. Good coverage gradient
+  - Pattern 1: 36/37 policies (near-universal)
+  - Pattern 8: 13/37 policies (common but not ubiquitous)
+  - Rare patterns: 1-2 policies (true edge cases)
+
+  3. Provenance preserved
+  Each pattern traces back to source policies, so you can validate the consolidation made sense.
+
+  4. Impressive reduction
+  195 → 13 patterns (93% reduction) without losing the core taxonomy of evidence types and mapping patterns.
+
+  Concerns
+
+  1. Potentially too abstract for discrimination
+
+  Patterns 1-3 are so universal they're almost tautological:
+  - "Policy defines scope" (36/37 policies)
+  - "Policy uses imperative language" (35/37 policies)
+  - "Policy has procedures" (35/37 policies)
+
+  These describe what policies are, not why they map to specific controls. Almost every policy-control pair would match these.
+
+  2. The rare patterns might be more valuable
+
+  Ironically, the "rare" patterns could be more discriminative:
+  - "External Interaction and Reporting" → probably maps to incident/notification controls
+  - "Independent Verification" → probably maps to audit/validation controls
+  - "Qualitative Attribute Mandate" → probably maps to transparency controls
+
+  These are specific enough to actually predict which controls a policy maps to.
+
+  3. Missing the "why this control" signal
+
+  The patterns answer "what makes a policy compliant?" but less so "how do you map policies to security controls?"
+
+  Verdict
+
+  Solid first pass, but the universal patterns may be too generic to be useful for prediction. They're correct but not discriminative.
+

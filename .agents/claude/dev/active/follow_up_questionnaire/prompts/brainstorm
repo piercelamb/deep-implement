@@ -1,0 +1,21 @@
+ultrathink
+
+We have a product called VRM Agent. This product attempts to automate vendor assessments using AI. It takes an organizations questionnaires as input and converts them into "criteria" (to-be-assessed per vendor). Then when an assessment is created, the organization uploads the vendors security documents (policies, SOC2, etc) and the criteria are assessed against the documents.
+
+The output of each criterion is "MET/NOT_MET/INCONCLUSIVE". The user can review these outputs and when they see a NOT_MET or INCONCLUSIVE, maybe they want the vendor to clarify or respond to something about it.
+
+The VRM agent _automatically_ creates a follow up questionnaire combining all NOT_MET and INCONCLUSIVE criteria for the vendor to clarify. The user has the chance to modify these criteria before the follow up is sent.
+
+The vendor receives the questionnaire, when the vendor "submits", these follow up questionnaire values are stored in the database.
+
+If the user DID NOT modify the automatic follow up questionnaire, we automatically re-run the assessment on _just_ the follow up questionnaire criteria.
+
+If the user DID modify the automatic follow up questionnaire, we automatically re-run the assessment on _all_ of the criteria (since we can't know how their modifications impact the entire assessment)
+
+Now, our question becomes: how is this new information represented to the step that assesses the criteria? The expectation from our product team is that after we've written the follow up questionnaire data to the database, that data needs to be stored into the vector DB namespace that contains the vendor assessment data (e.g. the policies, SOC2 etc). That follow-up questionnaire data should take a sort of precedence over the existing data in the vector DB
+
+In the case where the user does not modify, it feels fairly straight forward: the assessment step will get exactly the same criterion to vector search against that it did the first time we ran the assessment. The data stored in the vector DB for the follow-up questionnaire will be tied _directly_ to these questions, so they should be the "top" result. Do you agree with this?
+
+In the case where the user does modify, now the modified questions diverge from the original criteria, so when the assessment re-runs with the original criteria, the semantic similarity may diverge (in the worst case significantly), those results may never make it into the top_k
+
+Your task is to brainstorm around these topics and give me back your thoughts

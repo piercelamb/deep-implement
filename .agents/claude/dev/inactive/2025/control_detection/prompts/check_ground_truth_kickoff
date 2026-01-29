@@ -1,0 +1,29 @@
+ultrathink
+
+  Here is what I want to do. I'm not exactly sure how to implement it so you're going to have to come up with the best plan
+
+  We have @ai_services/scripts/experiments/control_detection/run_experiment.py which runs the experiment with a bunch of different modes
+  (single doc, multi doc etc)
+
+  We also have this script @ai_services/scripts/experiments/control_detection/analyze_ground_truth.py which iterates the output from the
+  above experiment (i think), finds and returns all the ground truth controls in the LLM output.
+
+  As I've looked at the outputs from the script, I'm starting to question that the ground truth-provided controls are truly ground-truth.
+
+  I want to run something that runs the experiment (in either single doc or multi-doc mode); once the experiment has run, it then iterates
+  the outputted LLM json responses and collects all the ground truth outputs in them.
+
+  For any ground truth control id that did not get the `MAPPED` classification (so PARTIAL or NO_MATCH) I want to run a prompt that tries
+  to judge whether or not the ground truth is actually correct. So it should more or less get the same system prompt as
+  @ai_services/scripts/experiments/control_detection/prompts/control_centric_expanded, but the main differences are that we should let the
+  LLM know that a previous LLM concluded the singular ground truth control its getting is not MAPPED and it needs to judge whether the LLM
+  was wrong or the ground truth is wrong.
+
+  We then want to sort these into two groups, the ones where the LLM is wrong and the ones where the GT is wrong. I want my GRC experts to
+  assess whether there are any ground truths that are actually wrong.
+
+  Please come up with a comprehensive plan so I can do all of this by invoking a simple CLI command. The approach should share as much code
+  as it can with the existing experiment @ai_services/scripts/experiments/control_detection while also containing any code unique to it in
+  its own sub folder in the experiment.
+
+  Output a plan file to @.agents/claude/dev/active/control_detection/planning/check_ground_truth

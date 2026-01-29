@@ -1,0 +1,44 @@
+Here's the full breakdown:
+
+  | Row | Policy Name                             | Controls | Has PDF |
+  |-----|-----------------------------------------|----------|---------|
+  | 26  | PCI DSS Compliance Policy               | 148      | Yes     |
+  | 35  | System Access Control Policy            | 64       | No      |
+  | 21  | Internal Privacy Policy                 | 37       | No      |
+  | 22  | Logging and Monitoring Policy           | 33       | Yes     |
+  | 20  | Information Security Policy             | 32       | Yes     |
+  | 4   | Asset Management Policy                 | 28       | Yes     |
+  | 12  | Data Protection Policy                  | 28       | Yes     |
+  | 28  | Physical Security Policy                | 27       | Yes     |
+  | 41  | AIMS Plan                               | 21       | Yes     |
+  | 16  | Incident Response Plan                  | 20       | Yes     |
+  | 40  | Vulnerability Management Policy         | 20       | Yes     |
+  | 9   | Change Management Policy                | 19       | Yes     |
+  | 24  | Network Security Policy                 | 19       | Yes     |
+  | 19  | ISMS Plan 2022                          | 17       | Yes     |
+  | 34  | SDLC Policy                             | 17       | Yes     |
+  | 32  | Risk Assessment Policy                  | 16       | Yes     |
+  | 15  | Encryption Policy                       | 15       | Yes     |
+  | 18  | ISMS + PIMS Plan                        | 15       | Yes     |
+  | 39  | Vendor Management Policy                | 15       | Yes     |
+  | 36  | System and Information Integrity Policy | 14       | No      |
+  | 25  | Password Policy                         | 10       | Yes     |
+  | ... | (18 more with ≤8 controls)              | 1-8      | Mixed   |
+
+  ---
+  Summary Statistics
+
+  | Metric            | All Policies | With PDF Only |
+  |-------------------|--------------|---------------|
+  | Count             | 42           | 37            |
+  | Total GT Controls | 702          | 585           |
+  | Min               | 0            | 1             |
+  | Max               | 148          | 148           |
+  | Mean              | 16.7         | 15.8          |
+  | Median            | 10           | 8             |
+
+  Key observations:
+  - PCI DSS is an outlier with 148 controls (21% of all GT controls in one policy)
+  - 5 policies have no PDF available (117 controls lost)
+  - Distribution is heavily right-skewed: median (8-10) << mean (15-16)
+  - Good test candidates with PDFs: rows 22, 20, 4, 12, 28 (27-33 controls each)

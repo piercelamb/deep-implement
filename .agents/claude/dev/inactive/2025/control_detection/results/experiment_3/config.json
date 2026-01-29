@@ -1,0 +1,24 @@
+{
+  "experiment_id": "experiment_3",
+  "date": "2025-12-27",
+  "timestamp": "20251227_145838",
+  "description": "",
+  "dataset": {
+    "experiment_name": "template_policies",
+    "documents_evaluated": 35,
+    "ground_truth_controls_total": 620
+  },
+  "hyperparameters": {
+    "mode": "control_centric",
+    "scoring_mode": "control_coverage",
+    "score_threshold": 0.48,
+    "control_centric": {
+      "model": "gemini-3-flash-preview",
+      "gcp_project": "ai-team-gemini-dev",
+      "vertex_location": "global",
+      "batch_strategy": "coherent",
+      "max_calls_per_document": 50,
+      "save_llm_outputs": true
+    }
+  }
+}

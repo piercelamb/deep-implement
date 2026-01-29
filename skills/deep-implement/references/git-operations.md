@@ -18,10 +18,10 @@ Git handling for /deep-implement.
 ## Git Detection
 
 ```python
-check_git_repo(target_dir) -> {"available": bool, "root": str | None}
+check_git_repo(target_dir) -> {"available": bool, "root": str}
 ```
 
-Run at setup. If not available, skip all git operations.
+Run at setup. Git is required - if not available, the setup script will fail with an error.
 
 ## Branch Check
 
@@ -101,10 +101,9 @@ Use HEREDOC for message formatting:
 git commit -m "$(cat <<'EOF'
 Implement section 01: Foundation
 
-- Created core data models
-- Set up project structure
-- Added initial test suite
+- Very concise summary of features/changes
 
+Plan: section-01-foundation.md
 Co-Authored-By: Claude <noreply@anthropic.com>
 EOF
 )"

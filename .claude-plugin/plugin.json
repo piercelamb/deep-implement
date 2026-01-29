@@ -3,6 +3,10 @@
   "description": "Implement code from /deep-plan sections with review and git workflow",
   "version": "0.1.0",
   "author": {
-    "name": "piercelamb"
-  }
+    "name": "piercelamb",
+    "url": "https://github.com/piercelamb"
+  },
+  "repository": "https://github.com/piercelamb/deep-implement",
+  "license": "MIT",
+  "keywords": ["implementation", "tdd", "code-review", "git", "workflow"]
 }

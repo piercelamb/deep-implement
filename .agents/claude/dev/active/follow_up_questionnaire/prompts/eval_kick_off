@@ -1,0 +1,31 @@
+We have a product called TPRM Agentic Assessment. This product attempts to automate vendor assessments using AI. It takes an organization’s questionnaires as input and converts them into "criteria" (to-be-assessed per vendor). Then when an assessment is created, the organization uploads the vendors security documents (policies, SOC2, etc) which are indexed into a VectorDB namespace and the criteria are assessed against the documents.
+
+The output of each criterion is "MET/NOT_MET/INCONCLUSIVE". The user can review these outputs and when they see a NOT_MET or INCONCLUSIVE, maybe they want the vendor to clarify or respond to something about it.
+
+The VRM agent *automatically* creates a follow up questionnaire combining all NOT_MET and INCONCLUSIVE criteria for the vendor to clarify. The user has the chance to modify these criteria before the follow up is sent.
+
+The vendor receives the questionnaire, when the vendor "submits", these follow up questionnaire values are stored in the database.
+
+If the user DID NOT modify the automatic follow up questionnaire, we automatically re-run the assessment on *just* the follow up questionnaire criteria.
+
+If the user DID modify the automatic follow up questionnaire, we automatically re-run the assessment on *all* of the criteria (since we can't know how their modifications impact the entire assessment).
+
+There is no limit on the number of follow-up questionnaires a user can send to a vendor throughout the course of a security review.
+
+The data entered into the follow-up questionnaire is supposed to be given precedence over any other data in the security review during these re-assessments.
+
+As such, we must index the follow-up questionnaire data into the same VectorDB namespace as the vendors documents to include them during RAG.
+
+---
+
+Currently our evals for TPRM Agentic Assessment do not evaluate whether or not indexed follow-up questionnaire responses are making it into retrieved results. That is what we're going to fix.
+
+First you will read in our existing eval CSV: @/Users/plamb/Drata/ai-services/ai_services/scripts/vellum/files/evals/gather_assess/retrieval_eval/test-case-1-jan-2026.csv
+
+This contains a row of existing questions we run during the eval.
+
+Next we are going to create a set of follow-up questionnaire questions and answers. These should be distinct from the existing eval but in the same security theme as those. You can provide fake-but-plausible answers to them.
+
+Write the questions and answers to a new CSV file in @/Users/plamb/Drata/ai-services/ai_services/scripts/vellum/files/evals/gather_assess/retrieval_eval
+
+Make sure there are at 5 total

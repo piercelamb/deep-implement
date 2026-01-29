@@ -1,0 +1,27 @@
+ultrathink
+
+We have a system that takes in vendor risk assessors questionnaires, converts the questions into "criteria" (which are used to perform a vendor assesssment) and then executes a vanilla RAG workflow over the vendors documents against those criteria.
+
+We have a workflow, criteria-to-questions which takes the criteria and converts them into questions ready-to-be-RAG'd over:
+
+workflow: @ai_services/vellum/workflows/vrm_agent_q3_fy26/criteria_to_questions
+prompts/support: @ai_services/vellum/support/vrm_agent_q3_fy26/criteria_to_questions
+
+We have another workflow, gather_evidence which runs the questions over a vector store then asks the LLM to classify the evidence returned as `MET/NOT_MET_INCONCLUSIVE` in light of the criterion question
+
+workflow: @ai_services/vellum/workflows/vrm_agent_q3_fy26/gather_evidence
+prompts/support: @ai_services/vellum/support/vrm_agent_q3_fy26/gather_evidence
+
+We have a problem with criterion questions like this:
+"Has the vendor experienced a security breach or data security incident in the last 36 months?"
+
+Here is a response from gather_evidence regarding that question:
+ {"vendor_compliance_classification": "NOT_MET", "classification_explanation": "The evidence explicitly states that no security incidents occurred during the audit period of January 1, 2024 to December 31, 2024, which falls within the last 36 months from the current date. Multiple references in the SOC 2 Type 2 report confirm that management stated no security incidents occurred during this period, and the auditor found no exceptions to this statement.", "relevant_excerpts_indexes": ["1","2","3","5"]}
+
+ for a question like this, the classification should be `MET` if no breaches have occurred. The LLM has the right reasoning, but its thinking about the question and classifications wrong.
+
+ IMO fixing this should be a two pronged approach:
+ - In criteria-to-questions, help the LLM frame questions like this better so they don't cause confusion. This should be a GENERAL strategy (not specific to this one question) for questions of this form (where a negative result is actually a positive outcome for e.g.)
+ - In gather_evidence, extra guardrailing on how to think about questions like this
+
+ Write a planning document to @.agents/claude/dev/active/security_breech_NOT_MET/planning about how to fix this

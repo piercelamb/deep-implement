@@ -1,0 +1,18 @@
+ultrathink
+
+false positive validation is running as we speak. But we can get started on the next step. We are going to use our MapReduce-style rules
+aggregator originally defined here: @.agents/claude/dev/active/control_detection/planning/map_reduce/plan.md and then reused for false
+negative rules generation here: @.agents/claude/dev/active/control_detection/planning/research/LLM_WRONG_MapReduce/research.md. The
+actual code is here @ai_services/scripts/experiments/control_detection/reason_aggregator
+
+We are going to re-use it again for false positive rules generation. But before we do that, i want you to sample some of the .json files
+in @ai_services/scripts/experiments/control_detection/files/llm_outputs/fp_validation/20251229_221006 which are the outputs from the
+currently running false positive validation. As a first step, I want to try and see if there is any way to intelligently consolidate the
+amount of data we need to analyze in the MapReduce step.
+
+Some naive thoughts off the top of my head: the same DCF might be a false positive across many documents; each analysis gets a
+`root_cause` constant as well.
+
+Write a document to @.agents/claude/dev/active/control_detection/planning/research/false_positive_research that explans what we we are
+doing to an AI engineer unfamiliar with our experiment and describes what, if anything, you find out and think about after looking at
+some of the json files

@@ -4,6 +4,16 @@ version = "0.1.0"
 description = "Claude Code implementation skill for deep-plan sections"
 requires-python = ">=3.11"
 dependencies = []
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Pierce Lamb"}
+]
+keywords = ["claude-code", "plugin", "implementation", "tdd", "code-review"]
+
+[project.urls]
+Homepage = "https://github.com/piercelamb/deep-implement"
+Repository = "https://github.com/piercelamb/deep-implement"
 
 [project.optional-dependencies]
 dev = [

@@ -1,0 +1,19 @@
+okay you can peruse @/Users/plamb/Drata/ai-services/ai_services/scripts/vellum/evals/. to get context for how we typically do the
+  next task:
+
+
+  - we are going to add rows to the `gather-evidence-retrieval-evaluation-test-case-1` eval
+  - the rows we will be adding will be in addition to the rows here: @/Users/plamb/Drata/ai-services/ai_services/scripts/vellum/files
+  /evals/gather_assess/retrieval_eval/test-case-1-followup-questions.csv/
+  - It should be the case that all other columns in `gather-evidence-retrieval-evaluation-test-case-1` remain constant for these new
+  rows. You can see what they look like here:
+  @/Users/plamb/Drata/ai-services/ai_services/scripts/vellum/files/evals/gather_assess/retrieval_eval/test-case-1-jan-2026.csv/
+  - although, the `filename` text should be: "f4e41b88-177c-4171-b02f-3ef698647e9b_Drata_Followup_Round_1.json"
+  - evals on vellum can take a "label" we should give these new rows a distinct label: "eval-follow-up-questionnaire"
+  - we will want to write a script that does all of this automatically and uses our vellum-eval-api tools (like the other scripts).
+  The script should have:
+    - a dry-run feature that shows it working without pushing to vellum
+    - the ability to push just a single row so we can go validate the single row worked
+    - the ability to push all rows
+
+  Research the existing eval scripts then create a thorough Task List to implement the above and start implementing

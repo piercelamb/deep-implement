@@ -1,0 +1,71 @@
+with max batch set to 10:
+
+======================================================================
+EXPERIMENT RESULTS
+======================================================================
+Documents evaluated: 1
+
+Retrieval Stage (before LLM):
+  Embedding recall: 100.0% (7/7 GT controls pass threshold)
+  Sent to LLM:      100.0% (7/7 GT controls in LLM batches)
+
+Counts:
+  Ground truth controls: 7
+  Predicted controls:    80
+  True positives:        6
+  False positives:       74
+  False negatives:       1
+
+Micro-averaged (pooled across all docs):
+  Precision: 7.5%
+  Recall:    85.7%
+  F1:        13.8%
+
+Macro-averaged (mean of per-doc metrics):
+  Precision: 7.5%
+  Recall:    85.7%
+  F1:        13.8%
+
+Time to First MAPPED:
+  Documents with MAPPED: 1/1
+  Mean:   23.11s
+  Median: 23.11s
+  Min:    23.11s
+  Max:    23.11s
+======================================================================
+
+After implementing @.agents/claude/dev/active/control_detection/planning/false_positive_additions/combined.md:
+
+======================================================================
+EXPERIMENT RESULTS
+======================================================================
+Documents evaluated: 1
+
+Retrieval Stage (before LLM):
+  Embedding recall: 100.0% (7/7 GT controls pass threshold)
+  Sent to LLM:      100.0% (7/7 GT controls in LLM batches)
+
+Counts:
+  Ground truth controls: 7
+  Predicted controls:    34
+  True positives:        6
+  False positives:       28
+  False negatives:       1
+
+Micro-averaged (pooled across all docs):
+  Precision: 17.6%
+  Recall:    85.7%
+  F1:        29.3%
+
+Macro-averaged (mean of per-doc metrics):
+  Precision: 17.6%
+  Recall:    85.7%
+  F1:        29.3%
+
+Time to First MAPPED:
+  Documents with MAPPED: 1/1
+  Mean:   27.41s
+  Median: 27.41s
+  Min:    27.41s
+  Max:    27.41s
+======================================================================
