@@ -1,0 +1,25 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "piercelamb-plugins",
+  "description": "Claude Code plugins by Pierce Lamb",
+  "version": "1.0.0",
+  "owner": {
+    "name": "Pierce Lamb",
+    "url": "https://github.com/piercelamb"
+  },
+  "plugins": [
+    {
+      "name": "deep-implement",
+      "description": "Implement code from /deep-plan sections with TDD, code review, and git workflow",
+      "version": "0.1.0",
+      "author": {
+        "name": "piercelamb",
+        "url": "https://github.com/piercelamb"
+      },
+      "source": "./",
+      "category": "development",
+      "homepage": "https://github.com/piercelamb/deep-implement",
+      "tags": ["implementation", "tdd", "code-review", "git", "workflow"]
+    }
+  ]
+}
