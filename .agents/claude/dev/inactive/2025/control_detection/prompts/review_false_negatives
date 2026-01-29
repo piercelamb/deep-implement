@@ -1,9 +1,0 @@
-ultrathink
-
-read in the current state of our prompt: @ai_services/scripts/experiments/control_detection/prompts/control_centric_false_negatives_take2
-
-Now read in our false negatives from experiment 7: @.agents/claude/dev/active/control_detection/planning/false_negatives_take3/false_negatives.json
-
-Your tasks is to uncover both universal themes causing the false negatives and rare rules/edge cases
-
-Write your analysis to @.agents/claude/dev/active/control_detection/planning/false_negatives_take3

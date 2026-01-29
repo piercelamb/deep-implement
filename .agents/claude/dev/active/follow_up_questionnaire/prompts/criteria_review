@@ -1,4 +1,0 @@
-you need to evaluate the workflow that takes CriterionEvidence as an input after gather_evidence which is `criteria_review` (see
-  @ai_services/temporal_workers/workflows/vrm/gather_assess_and_review_criterion_questions_workflow_v1.py)
-
-  is this workflow going to break because we change CriterionEvidence.refs?

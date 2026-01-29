@@ -1,9 +1,0 @@
-ultrathink
-
-I've set up this dir: @ai_services/scripts/experiments/control_detection/models/colmodernvbert
-
-We are going to use colmodernvbert to create similarity scores of page images to DCF controls
-
-Fetch the colmodernvebert page: https://huggingface.co/ModernVBERT/colmodernvbert
-
-and tell me what I need to do/download to run this model locally. For e.g., it appears to be an adapter model, what model is it an adapter for? How do i run adapters using the huggingface transformers package?

@@ -1,9 +1,0 @@
-ultrathink
-
-  read in @.agents/claude/dev/active/control_detection/planning/three_stage_mapping/plan.md
-
-  You task is to split this plan into sequential, isolated units of work. Later, we will iterate the splits you create and create tasks
-  within each split in a later prompt. The idea is to break this plan into smaller units of work so we can more easily implement and verify
-  each split you create.
-
-  Write your splitting plan to @.agents/claude/dev/active/control_detection/planning/three_stage_mapping
