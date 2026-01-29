@@ -12,6 +12,10 @@
 
 Where `/deep-plan` produces the *what* and *why*, `/deep-implement` handles the *how*—methodically, with tests first and human-in-the-loop code review at each step.
 
+I built `/deep-implement` because after I'd automated my planning workflow through `/deep-plan`, I found myself executing the same steps over and over to actually implement the produced section files. Why not have Claude orchestrate it for me?
+
+`/deep-implement` keeps the human in the loop through code review and managing context. In the future `/deep-implement` will look to provide even more automation.
+
 ## TL;DR
 ```
 /plugin marketplace add piercelamb/deep-implement
@@ -50,10 +54,11 @@ For each section from `/deep-plan`, the plugin:
 - **Implements with TDD**: Write tests first, then implementation
 - **Runs Code Review**: A dedicated subagent reviews staged changes
 - **Interviews You**: Triage findings, get your input on real decisions
+- **Updates Section Docs**: Records what was actually built back into the section file
 - **Commits Atomically**: One commit per section with review trail
 - **Tracks Progress**: Resume from any point after interruption
 
-By the end, you have production-ready code with a git history that tells a clear story—one section at a time.
+By the end, you have production-ready code with a git history that tells a clear story—and section documents that serve as living documentation of what was actually built, not just what was planned.
 
 ## Why deep-implement?
 
@@ -75,6 +80,7 @@ Result: Atomic commits, code review at each step, clear progress tracking
 - **Incremental verification**: Each section is tested and reviewed before moving on
 - **Clean git history**: One commit per section, not one massive commit
 - **Human oversight**: You approve code review fixes, not rubber-stamp everything
+- **Living documentation**: Section files are updated with what was actually built—a human or AI can get up to speed instantly without reading code
 - **Resumable**: Context limit? Restart exactly where you left off
 
 ## When to Use
@@ -247,7 +253,7 @@ For each section, the plugin runs:
 | **Triage** | Claude categorizes: ask user / auto-fix / let go |
 | **Interview** | You decide on important items |
 | **Apply Fixes** | Implement approved changes |
-| **Update Docs** | Record what was actually built in section file |
+| **Update Docs** | Update section file with "What Was Built"—captures implementation decisions, code review changes, and deviations from plan |
 | **Commit** | Atomic commit with conventional message |
 | **Record** | Save commit hash for resume |
 
@@ -272,6 +278,16 @@ planning/
 ```
 
 Your target directory contains the actual implementation code, with one commit per section.
+
+### Living Documentation
+
+Each `section-NN-*.md` file gets a "What Was Built" addendum after implementation. This captures:
+- Actual files created/modified
+- Implementation decisions made during coding
+- Changes from code review
+- Deviations from the original plan
+
+This means anyone—human or AI agent—can quickly understand what was built without introspecting code. The section files become point-in-time documentation that stays accurate because they're updated at commit time.
 
 ## Requirements
 
