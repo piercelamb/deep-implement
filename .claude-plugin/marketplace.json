@@ -17,8 +17,8 @@
         "url": "https://github.com/piercelamb"
       },
       "source": {
-        "type": "github",
-        "repo": "piercelamb/deep-project"
+        "source": "url",
+        "url": "https://github.com/piercelamb/deep-project.git"
       },
       "category": "development",
       "homepage": "https://github.com/piercelamb/deep-project",
@@ -33,8 +33,8 @@
         "url": "https://github.com/piercelamb"
       },
       "source": {
-        "type": "github",
-        "repo": "piercelamb/deep-plan"
+        "source": "url",
+        "url": "https://github.com/piercelamb/deep-plan.git"
       },
       "category": "development",
       "homepage": "https://github.com/piercelamb/deep-plan",
