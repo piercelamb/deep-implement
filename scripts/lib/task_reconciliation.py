@@ -5,7 +5,7 @@ The session ID is captured by the SessionStart hook and written to CLAUDE_ENV_FI
 
 Key concepts:
 - CLAUDE_CODE_TASK_LIST_ID: User-specified task list for sharing across sessions
-- CLAUDE_SESSION_ID: Auto-captured session ID from SessionStart hook
+- DEEP_SESSION_ID: Auto-captured session ID from SessionStart hook
 """
 
 from __future__ import annotations
@@ -21,7 +21,7 @@ class TaskListSource(StrEnum):
 
     CONTEXT = "context"  # From hook additionalContext -> CLI arg
     USER_ENV = "user_env"  # From CLAUDE_CODE_TASK_LIST_ID
-    SESSION = "session"  # From CLAUDE_SESSION_ID
+    SESSION = "session"  # From DEEP_SESSION_ID
     NONE = "none"  # No task list ID available
 
 
@@ -37,7 +37,7 @@ class TaskListContext:
     def from_env(cls) -> Self:
         """Get task list context from environment variables.
 
-        Priority: CLAUDE_CODE_TASK_LIST_ID > CLAUDE_SESSION_ID
+        Priority: CLAUDE_CODE_TASK_LIST_ID > DEEP_SESSION_ID
 
         Returns:
             TaskListContext with task_list_id, source, and is_user_specified
@@ -50,7 +50,7 @@ class TaskListContext:
                 is_user_specified=True,
             )
 
-        session_id = os.environ.get("CLAUDE_SESSION_ID")
+        session_id = os.environ.get("DEEP_SESSION_ID")
         if session_id:
             return cls(
                 task_list_id=session_id,

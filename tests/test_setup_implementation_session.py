@@ -465,10 +465,10 @@ class TestSessionIdHandling:
 
         env = os.environ.copy()
         # Clear any existing session vars
-        env.pop("CLAUDE_SESSION_ID", None)
+        env.pop("DEEP_SESSION_ID", None)
         env.pop("CLAUDE_CODE_TASK_LIST_ID", None)
         if env_session_id:
-            env["CLAUDE_SESSION_ID"] = env_session_id
+            env["DEEP_SESSION_ID"] = env_session_id
 
         result = subprocess.run(cmd, capture_output=True, text=True, env=env)
         return json.loads(result.stdout)

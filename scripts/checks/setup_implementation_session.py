@@ -765,7 +765,7 @@ def main():
     # Get task list context
     # Priority: --session-id (from hook context) > env vars
     context_session_id = args.session_id  # From hook additionalContext -> Claude -> CLI arg
-    env_task_context = TaskListContext.from_env()  # From CLAUDE_CODE_TASK_LIST_ID or CLAUDE_SESSION_ID
+    env_task_context = TaskListContext.from_env()  # From CLAUDE_CODE_TASK_LIST_ID or DEEP_SESSION_ID
     env_session_id = env_task_context.task_list_id
 
     # Determine which session_id to use and track source

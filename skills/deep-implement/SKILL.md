@@ -100,7 +100,7 @@ If user selects "Specify path", they will type the absolute path.
 
 ### E. Run Setup Script
 
-**First, check for session_id in your context.** Look for `DEEP_IMPLEMENT_SESSION_ID=xxx`
+**First, check for session_id in your context.** Look for `DEEP_SESSION_ID=xxx`
 which was set by the SessionStart hook. This appears in your context as additional context.
 
 Run the setup script with discovered paths:
@@ -109,11 +109,11 @@ uv run {script_path} \
   --sections-dir "{sections_dir}" \
   --target-dir "{target_dir}" \
   --plugin-root "{plugin_root}" \
-  --session-id "{DEEP_IMPLEMENT_SESSION_ID}"
+  --session-id "{DEEP_SESSION_ID}"
 ```
 
-If `DEEP_IMPLEMENT_SESSION_ID` is not in your context, omit `--session-id`
-(setup will fall back to `CLAUDE_SESSION_ID` env var).
+If `DEEP_SESSION_ID` is not in your context, omit `--session-id`
+(setup will fall back to `DEEP_SESSION_ID` env var).
 
 Parse the JSON output.
 

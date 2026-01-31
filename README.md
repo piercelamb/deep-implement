@@ -2,7 +2,7 @@
 
 # /deep-implement, a Claude Code plugin
 
-![Version](https://img.shields.io/badge/version-0.1.0-blue)
+![Version](https://img.shields.io/badge/version-0.2.0-blue)
 ![Status](https://img.shields.io/badge/status-beta-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Claude Code](https://img.shields.io/badge/Claude%20Code-Plugin-purple)
@@ -483,4 +483,4 @@ Pierce Lamb
 
 ## Version
 
-0.1.0
+0.2.0

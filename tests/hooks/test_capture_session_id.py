@@ -51,7 +51,7 @@ class TestAdditionalContextOutput:
         assert output == {
             "hookSpecificOutput": {
                 "hookEventName": "SessionStart",
-                "additionalContext": "DEEP_IMPLEMENT_SESSION_ID=test-session-123",
+                "additionalContext": "DEEP_SESSION_ID=test-session-123",
             }
         }
 
@@ -64,7 +64,7 @@ class TestAdditionalContextOutput:
         output = json.loads(stdout)
         assert (
             output["hookSpecificOutput"]["additionalContext"]
-            == "DEEP_IMPLEMENT_SESSION_ID=51f3d992-1234-5678-9abc-def012345678"
+            == "DEEP_SESSION_ID=51f3d992-1234-5678-9abc-def012345678"
         )
 
 
@@ -117,11 +117,11 @@ class TestClaudeEnvFileFallback:
 
         assert returncode == 0
         # Should still output to context
-        assert "DEEP_IMPLEMENT_SESSION_ID=test-session-456" in stdout
+        assert "DEEP_SESSION_ID=test-session-456" in stdout
 
         # Should also write to env file
         content = env_file.read_text()
-        assert "export CLAUDE_SESSION_ID=test-session-456" in content
+        assert "export DEEP_SESSION_ID=test-session-456" in content
 
     def test_writes_transcript_path_to_env_file(self, tmp_path):
         """Should write transcript_path to CLAUDE_ENV_FILE."""
@@ -138,13 +138,13 @@ class TestClaudeEnvFileFallback:
 
         assert returncode == 0
         content = env_file.read_text()
-        assert "export CLAUDE_SESSION_ID=test-session-789" in content
+        assert "export DEEP_SESSION_ID=test-session-789" in content
         assert "export CLAUDE_TRANSCRIPT_PATH=/path/to/transcript.jsonl" in content
 
     def test_does_not_duplicate_existing_entries(self, tmp_path):
         """Should not duplicate entries already in CLAUDE_ENV_FILE."""
         env_file = tmp_path / "env_file.sh"
-        env_file.write_text("export CLAUDE_SESSION_ID=test-session-111\n")
+        env_file.write_text("export DEEP_SESSION_ID=test-session-111\n")
 
         payload = {"session_id": "test-session-111"}
         returncode, _, _ = run_hook(
@@ -154,7 +154,7 @@ class TestClaudeEnvFileFallback:
         assert returncode == 0
         content = env_file.read_text()
         # Should only appear once
-        assert content.count("CLAUDE_SESSION_ID=test-session-111") == 1
+        assert content.count("DEEP_SESSION_ID=test-session-111") == 1
 
     def test_succeeds_when_claude_env_file_not_set(self):
         """Should succeed even when CLAUDE_ENV_FILE is not set."""
@@ -166,7 +166,7 @@ class TestClaudeEnvFileFallback:
 
         assert returncode == 0
         # Should still output to context
-        assert "DEEP_IMPLEMENT_SESSION_ID=test-session-222" in stdout
+        assert "DEEP_SESSION_ID=test-session-222" in stdout
 
     def test_succeeds_when_claude_env_file_write_fails(self, tmp_path):
         """Should succeed even when CLAUDE_ENV_FILE write fails."""
@@ -178,7 +178,7 @@ class TestClaudeEnvFileFallback:
 
         assert returncode == 0
         # Should still output to context
-        assert "DEEP_IMPLEMENT_SESSION_ID=test-session-333" in stdout
+        assert "DEEP_SESSION_ID=test-session-333" in stdout
 
 
 class TestAlwaysReturnsZero:
@@ -205,3 +205,39 @@ class TestAlwaysReturnsZero:
         payload = {}
         returncode, _, _ = run_hook(json.dumps(payload))
         assert returncode == 0
+
+
+class TestDeepSessionIdConditional:
+    """Test conditional output based on DEEP_SESSION_ID environment variable."""
+
+    def test_skips_output_when_deep_session_id_matches(self):
+        """Should not output when DEEP_SESSION_ID already matches session_id."""
+        payload = {"session_id": "test-session-123"}
+        returncode, stdout, _ = run_hook(
+            json.dumps(payload), env={"DEEP_SESSION_ID": "test-session-123"}
+        )
+
+        assert returncode == 0
+        # Should NOT output additionalContext since it already matches
+        assert stdout == ""
+
+    def test_outputs_when_deep_session_id_differs(self):
+        """Should output when DEEP_SESSION_ID exists but doesn't match."""
+        payload = {"session_id": "new-session-456"}
+        returncode, stdout, _ = run_hook(
+            json.dumps(payload), env={"DEEP_SESSION_ID": "old-session-123"}
+        )
+
+        assert returncode == 0
+        output = json.loads(stdout)
+        assert output["hookSpecificOutput"]["additionalContext"] == "DEEP_SESSION_ID=new-session-456"
+
+    def test_outputs_when_deep_session_id_not_set(self):
+        """Should output when DEEP_SESSION_ID is not set."""
+        payload = {"session_id": "test-session-789"}
+        # Don't pass DEEP_SESSION_ID in env
+        returncode, stdout, _ = run_hook(json.dumps(payload), env={})
+
+        assert returncode == 0
+        output = json.loads(stdout)
+        assert output["hookSpecificOutput"]["additionalContext"] == "DEEP_SESSION_ID=test-session-789"
