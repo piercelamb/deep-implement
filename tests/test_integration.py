@@ -54,7 +54,7 @@ class TestFullSetupFlow:
         assert output["success"] is True
         assert output["mode"] == "new"
         assert len(output["sections"]) == 2
-        # Tasks may or may not be written depending on CLAUDE_SESSION_ID
+        # Tasks may or may not be written depending on DEEP_SESSION_ID
         assert "tasks_written" in output
         # Resolve both paths to handle macOS /var -> /private/var symlink
         assert Path(output["target_dir"]).resolve() == target_dir.resolve()
@@ -476,7 +476,7 @@ class TestTaskGeneration:
         target_dir = mock_git_repo
 
         # Set a session ID so tasks get written
-        monkeypatch.setenv("CLAUDE_SESSION_ID", "test-session-123")
+        monkeypatch.setenv("DEEP_SESSION_ID", "test-session-123")
 
         setup_script = Path(__file__).parent.parent / "scripts" / "checks" / "setup_implementation_session.py"
         if not setup_script.exists():
@@ -492,7 +492,7 @@ class TestTaskGeneration:
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent,
-            env={**subprocess.os.environ, "CLAUDE_SESSION_ID": "test-session-123"}
+            env={**subprocess.os.environ, "DEEP_SESSION_ID": "test-session-123"}
         )
 
         output = json.loads(result.stdout)
@@ -514,7 +514,7 @@ class TestTaskGeneration:
         target_dir = mock_git_repo
 
         # Ensure no session ID is set
-        monkeypatch.delenv("CLAUDE_SESSION_ID", raising=False)
+        monkeypatch.delenv("DEEP_SESSION_ID", raising=False)
         monkeypatch.delenv("CLAUDE_CODE_TASK_LIST_ID", raising=False)
 
         setup_script = Path(__file__).parent.parent / "scripts" / "checks" / "setup_implementation_session.py"
@@ -523,7 +523,7 @@ class TestTaskGeneration:
 
         # Create clean environment without session variables
         clean_env = {k: v for k, v in subprocess.os.environ.items()
-                     if k not in ("CLAUDE_SESSION_ID", "CLAUDE_CODE_TASK_LIST_ID")}
+                     if k not in ("DEEP_SESSION_ID", "CLAUDE_CODE_TASK_LIST_ID")}
 
         result = subprocess.run(
             [
