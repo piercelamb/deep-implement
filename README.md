@@ -268,6 +268,8 @@ That's it. Each section gets implemented, reviewed, and committed before moving 
 ```
 Then scroll to "Installed", find `deep-implement`, and click "Enable".
 
+> **Already installed `/deep-plan` or `/deep-project`?** All three plugins share a marketplace. If you've already added any one of the deep trilogy repos, just run `/plugin install deep-implement` directly — no need to add another marketplace.
+
 ### Manual Installation
 
 **Option A: Via settings.json**
