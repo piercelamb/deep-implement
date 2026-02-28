@@ -55,15 +55,18 @@ The sections directory must contain:
 
 ### C. Discover Plugin Root
 
-Find the setup script to discover the plugin root:
-```bash
-find "$(pwd)" -path "*/deep_implement/scripts/checks/setup_implementation_session.py" -type f 2>/dev/null | head -1
-```
+**CRITICAL: Locate plugin root BEFORE running any scripts.**
 
-If not found in current directory, search from home:
+The SessionStart hook injects `DEEP_PLUGIN_ROOT=<path>` into your context. Look for it now — it appears alongside `DEEP_SESSION_ID` in your context from session startup.
+
+**If `DEEP_PLUGIN_ROOT` is in your context**, use it directly as `plugin_root`. The setup script is at:
+`<DEEP_PLUGIN_ROOT value>/scripts/checks/setup_implementation_session.py`
+
+**Only if `DEEP_PLUGIN_ROOT` is NOT in your context** (hook didn't run), fall back to search:
 ```bash
-find ~ -path "*/deep_implement/scripts/checks/setup_implementation_session.py" -type f 2>/dev/null | head -1
+find "$(pwd)" -name "setup_implementation_session.py" -path "*/scripts/checks/*" -type f 2>/dev/null | head -1
 ```
+If not found: `find ~ -name "setup_implementation_session.py" -path "*/scripts/checks/*" -path "*deep*implement*" -type f 2>/dev/null | head -1`
 
 **Store the script path.** The plugin_root is the directory two levels up from `scripts/checks/`.
 
