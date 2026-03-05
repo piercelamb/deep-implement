@@ -225,6 +225,52 @@ class TestCheckWorkingTreeStatus:
         assert result["clean"] is False
         assert "README.md" in result["dirty_files"]
 
+    def test_file_not_found_error_returns_error_dict(self, mock_git_repo, mocker):
+        """FileNotFoundError (git not installed) returns error dict, not clean=True."""
+        mocker.patch(
+            "scripts.checks.setup_implementation_session.subprocess.run",
+            side_effect=FileNotFoundError("git not found"),
+        )
+        result = check_working_tree_status(mock_git_repo)
+
+        assert result["clean"] is False
+        assert "git not found" in result.get("error", "")
+        assert result["dirty_files"] == []
+
+    def test_nonzero_returncode_returns_error_dict(self, mock_git_repo, mocker):
+        """Non-zero returncode returns error dict with stderr."""
+        mocker.patch(
+            "scripts.checks.setup_implementation_session.subprocess.run",
+            return_value=subprocess.CompletedProcess(
+                args=["git", "status"],
+                returncode=128,
+                stdout="",
+                stderr="fatal: not a git repository",
+            ),
+        )
+        result = check_working_tree_status(mock_git_repo)
+
+        assert result["clean"] is False
+        assert "fatal: not a git repository" in result.get("error", "")
+
+    def test_permission_error_propagates(self, mock_git_repo, mocker):
+        """PermissionError should NOT be caught (propagates to caller)."""
+        mocker.patch(
+            "scripts.checks.setup_implementation_session.subprocess.run",
+            side_effect=PermissionError("Permission denied"),
+        )
+        with pytest.raises(PermissionError):
+            check_working_tree_status(mock_git_repo)
+
+    def test_no_bare_except_in_source(self):
+        """check_working_tree_status should not contain 'except Exception'."""
+        import inspect
+        source = inspect.getsource(check_working_tree_status)
+        assert "except Exception" not in source, (
+            "check_working_tree_status still has bare 'except Exception' — "
+            "only FileNotFoundError should be caught"
+        )
+
 
 class TestDetectCommitStyle:
     """Tests for detect_commit_style function."""
