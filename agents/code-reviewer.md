@@ -33,3 +33,4 @@ Return a JSON object with this EXACT structure:
 3. Prioritize high-severity issues (security, data loss, crashes)
 4. Check implementation against the plan's requirements
 5. If no issues found, return that the implementation looked good
+6. For Go hex architecture projects: flag files exceeding size limits (300/250/100 by layer), functions >75 lines, or inner-layer imports of outer layers

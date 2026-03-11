@@ -238,6 +238,8 @@ Read {sections_dir}/section-NN-<name>.md
 
 See [implementation-loop.md](references/implementation-loop.md)
 
+**Go projects:** Read [go-guardrails.md](references/go-guardrails.md) for file size limits and architecture rules before writing code.
+
 Follow TDD workflow:
 1. Create skeleton files for imports
 2. Write tests from section spec
@@ -249,6 +251,14 @@ Follow TDD workflow:
 ### Step 4: Track Created Files
 
 Maintain list of all files created during implementation.
+
+### Step 4.5: Guardrail Validation (Go projects)
+
+If runtime is `go`:
+1. Run `uv run {plugin_root}/scripts/checks/validate_go_guardrails.py --target-dir "{target_dir}"`
+2. If passed: continue to Step 5
+3. If failed: fix violations (split files, extract helpers, fix imports), re-run tests, re-validate
+4. After 2 failed retries: proceed anyway, let code reviewer flag issues
 
 ### Step 5: Stage Changes
 
