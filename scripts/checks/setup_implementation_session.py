@@ -22,7 +22,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from scripts.lib.config import load_session_config, save_session_config, create_session_config
-from scripts.lib.sections import parse_manifest_block, parse_project_config_block, validate_section_file, get_completed_sections
+from scripts.lib.sections import parse_manifest_block, parse_project_config_block, parse_section_concerns, sort_sections_by_concern, validate_section_file, get_completed_sections
 from scripts.lib.task_storage import TaskToWrite, write_tasks, build_dependency_graph, TaskStatus
 from scripts.lib.task_reconciliation import TaskListContext
 from scripts.lib.impl_tasks import (
@@ -377,6 +377,87 @@ def check_pre_commit_hooks(git_root: Path) -> dict:
     }
 
 
+def check_github_remote(git_root: Path) -> dict:
+    """
+    Check for GitHub remote and parse owner/repo.
+
+    Args:
+        git_root: Git repository root
+
+    Returns:
+        {"has_remote": bool, "remote_url": str | None, "owner_repo": str | None}
+    """
+    try:
+        result = subprocess.run(
+            ["git", "remote", "get-url", "origin"],
+            cwd=git_root,
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode == 0:
+            url = result.stdout.strip()
+            # Parse owner/repo from various URL formats:
+            # https://github.com/owner/repo.git
+            # git@github.com:owner/repo.git
+            # https://github.com/owner/repo
+            match = re.search(r"github\.com[:/]([^/]+/[^/\s]+?)(?:\.git)?$", url)
+            if match:
+                return {
+                    "has_remote": True,
+                    "remote_url": url,
+                    "owner_repo": match.group(1),
+                }
+            # Non-GitHub remote
+            return {"has_remote": True, "remote_url": url, "owner_repo": None}
+    except Exception:
+        pass
+    return {"has_remote": False, "remote_url": None, "owner_repo": None}
+
+
+def check_gh_cli() -> dict:
+    """
+    Check if GitHub CLI is installed and authenticated.
+
+    Returns:
+        {"installed": bool, "authenticated": bool, "gh_version": str | None}
+    """
+    # Check installation
+    try:
+        version_result = subprocess.run(
+            ["gh", "--version"],
+            capture_output=True,
+            text=True,
+        )
+        if version_result.returncode != 0:
+            return {"installed": False, "authenticated": False, "gh_version": None}
+    except FileNotFoundError:
+        return {"installed": False, "authenticated": False, "gh_version": None}
+
+    # Parse version string (first line: "gh version X.Y.Z (date)")
+    gh_version = None
+    first_line = version_result.stdout.strip().split("\n")[0]
+    version_match = re.search(r"(\d+\.\d+\.\d+)", first_line)
+    if version_match:
+        gh_version = version_match.group(1)
+
+    # Check authentication
+    try:
+        auth_result = subprocess.run(
+            ["gh", "auth", "status"],
+            capture_output=True,
+            text=True,
+        )
+        authenticated = auth_result.returncode == 0
+    except Exception:
+        authenticated = False
+
+    return {
+        "installed": True,
+        "authenticated": authenticated,
+        "gh_version": gh_version,
+    }
+
+
 def detect_section_review_state(state_dir: Path, section_name: str) -> dict:
     """
     Detect the code review state for a specific section.
@@ -718,6 +799,17 @@ def main():
     sections = validation["sections"]
     project_config = validation["project_config"]
 
+    # Concern-based ordering (opt-in via PROJECT_CONFIG)
+    concern_ordering = project_config.get("concern_ordering", "").lower() == "true"
+    index_content = (sections_dir / "index.md").read_text()
+    section_concerns = {}
+    execution_order = list(sections)  # default: manifest order
+    if concern_ordering:
+        section_concerns = parse_section_concerns(index_content)
+        if section_concerns:
+            execution_order = sort_sections_by_concern(sections, section_concerns)
+            sections = execution_order
+
     # State directory (sibling to sections) for session config and reviews
     state_dir = sections_dir.parent / "implementation"
 
@@ -744,6 +836,21 @@ def main():
 
     # Check pre-commit hooks
     pre_commit = check_pre_commit_hooks(git_root)
+
+    # Check GitHub availability
+    github_remote = check_github_remote(git_root)
+    gh_cli = check_gh_cli()
+    github_available = (
+        github_remote.get("owner_repo") is not None
+        and gh_cli.get("installed", False)
+        and gh_cli.get("authenticated", False)
+    )
+    github_info = {
+        "available": github_available,
+        "owner_repo": github_remote.get("owner_repo"),
+        "gh_installed": gh_cli.get("installed", False),
+        "gh_authenticated": gh_cli.get("authenticated", False),
+    }
 
     # Infer session state
     state = infer_session_state(sections_dir, state_dir, git_root)
@@ -785,6 +892,17 @@ def main():
         session_id_matched = (context_session_id == env_session_id)
 
     # Context values for task generation
+    # GitHub state is populated later by SKILL.md after user opt-in;
+    # on resume, read from existing config
+    existing_config = load_session_config(state_dir) if state["mode"] == "resume" else None
+    github_enabled = "false"
+    github_issue = "none"
+    if existing_config and existing_config.get("github", {}).get("enabled"):
+        github_enabled = "true"
+        issue_num = existing_config["github"].get("issue_number")
+        if issue_num:
+            github_issue = str(issue_num)
+
     context_values = {
         "plugin_root": str(plugin_root),
         "sections_dir": str(sections_dir),
@@ -792,6 +910,9 @@ def main():
         "state_dir": str(state_dir),
         "runtime": project_config["runtime"],
         "test_command": project_config["test_command"],
+        "github_enabled": github_enabled,
+        "github_issue": github_issue,
+        "concern_ordering": str(concern_ordering).lower(),
     }
 
     # Generate implementation tasks
@@ -834,11 +955,15 @@ def main():
         "dirty_files": working_tree["dirty_files"],
         "commit_style": commit_style,
         "pre_commit": pre_commit,
+        "github": github_info,
         "project_config": project_config,
         "sections": sections,
         "completed_sections": state["completed_sections"],
         "resume_from": state["resume_from"],
         "resume_section_state": state.get("resume_section_state"),
+        "concern_ordering": concern_ordering,
+        "section_concerns": section_concerns,
+        "execution_order": execution_order,
         "tasks_written": write_result.tasks_written if write_result else 0,
         "task_write_error": task_write_error,
         # Session ID diagnostics

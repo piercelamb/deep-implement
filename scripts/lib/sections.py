@@ -45,9 +45,16 @@ def parse_project_config_block(index_content: str) -> dict[str, str]:
     return config
 
 
+VALID_CONCERNS = ["scaffold", "functional", "observability", "configuration", "resilience", "integration"]
+CONCERN_ORDER = {c: i for i, c in enumerate(VALID_CONCERNS)}
+
+
 def parse_manifest_block(index_content: str) -> list[str]:
     """
     Extract section names from SECTION_MANIFEST block.
+
+    Handles optional concern tags after section names (e.g., "section-01-foundation scaffold").
+    Tags are ignored here — use parse_section_concerns() to extract them.
 
     Args:
         index_content: Content of index.md file
@@ -71,9 +78,112 @@ def parse_manifest_block(index_content: str) -> list[str]:
         # Skip empty lines and comments
         if not line or line.startswith('#'):
             continue
-        sections.append(line)
+        # Support optional concern tag: "section-01-foundation scaffold"
+        parts = line.split()
+        sections.append(parts[0])
 
     return sections
+
+
+def parse_section_concerns(index_content: str) -> dict[str, str]:
+    """
+    Extract concern tags from SECTION_MANIFEST lines.
+
+    Each manifest line can optionally include a concern tag:
+        section-01-foundation scaffold
+        section-02-models functional
+
+    Args:
+        index_content: Content of index.md file
+
+    Returns:
+        Dict mapping section name to concern type for sections that have valid tags.
+        Sections without tags or with invalid tags are omitted.
+    """
+    pattern = r'<!--\s*SECTION_MANIFEST\s*\n(.*?)\nEND_MANIFEST\s*-->'
+    match = re.search(pattern, index_content, re.DOTALL)
+
+    if not match:
+        return {}
+
+    manifest_content = match.group(1)
+    concerns = {}
+
+    for line in manifest_content.split('\n'):
+        line = line.strip()
+        if not line or line.startswith('#'):
+            continue
+        parts = line.split()
+        if len(parts) >= 2 and parts[1] in VALID_CONCERNS:
+            concerns[parts[0]] = parts[1]
+
+    return concerns
+
+
+def sort_sections_by_concern(sections: list[str], concerns: dict[str, str]) -> list[str]:
+    """
+    Reorder sections by concern type, preserving number order within same concern.
+
+    Concern execution order: scaffold → functional → observability →
+    configuration → resilience → integration.
+
+    Untagged sections go after all tagged sections, in their original order.
+
+    Args:
+        sections: List of section names in manifest order
+        concerns: Dict mapping section name to concern type
+
+    Returns:
+        Reordered list of section names.
+    """
+    if not concerns:
+        return sections
+
+    tagged = [(s, CONCERN_ORDER[concerns[s]]) for s in sections if s in concerns]
+    untagged = [s for s in sections if s not in concerns]
+
+    # Sort tagged by concern order, then by original position (stable sort preserves manifest order)
+    tagged.sort(key=lambda x: x[1])
+
+    return [s for s, _ in tagged] + untagged
+
+
+def parse_section_meta(section_content: str) -> dict[str, str]:
+    """
+    Extract SECTION_META block from section file content.
+
+    Expected format within a section .md file:
+        <!-- SECTION_META
+        concern: scaffold
+        target_files: internal/ports/repository.go, internal/domain/entity.go
+        estimated_lines: 150
+        END_SECTION_META -->
+
+    Args:
+        section_content: Content of a section markdown file
+
+    Returns:
+        Dict with keys: concern, target_files, estimated_lines (all optional).
+        Returns empty dict when no SECTION_META block found.
+    """
+    pattern = r'<!--\s*SECTION_META\s*\n(.*?)\nEND_SECTION_META\s*-->'
+    match = re.search(pattern, section_content, re.DOTALL)
+
+    if not match:
+        return {}
+
+    meta_content = match.group(1)
+    meta = {}
+
+    for line in meta_content.split('\n'):
+        line = line.strip()
+        if not line or line.startswith('#'):
+            continue
+        if ':' in line:
+            key, value = line.split(':', 1)
+            meta[key.strip()] = value.strip()
+
+    return meta
 
 
 def validate_section_file(section_path: Path) -> dict:
