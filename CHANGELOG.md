@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- Marketplace now lists `lodestone` (sibling MCP research-corpus plugin).
+- Marketplace now lists `deep-sota` (sibling research-skill plugin that drives lodestone).
+
 ## [0.2.1] - 2026-02-28
 
 ### Fixed

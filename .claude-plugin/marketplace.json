@@ -2,7 +2,7 @@
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "piercelamb-plugins",
   "description": "Claude Code plugins by Pierce Lamb",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "owner": {
     "name": "Pierce Lamb",
     "url": "https://github.com/piercelamb"
@@ -52,6 +52,38 @@
       "category": "development",
       "homepage": "https://github.com/piercelamb/deep-implement",
       "tags": ["implementation", "tdd", "code-review", "git", "workflow"]
+    },
+    {
+      "name": "deep-sota",
+      "description": "Paper- and repo-grounded research over the lodestone knowledge base",
+      "version": "0.1.0",
+      "author": {
+        "name": "piercelamb",
+        "url": "https://github.com/piercelamb"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/piercelamb/deep-sota.git"
+      },
+      "category": "research",
+      "homepage": "https://github.com/piercelamb/deep-sota",
+      "tags": ["research", "arxiv", "rag", "knowledge-base", "lodestone"]
+    },
+    {
+      "name": "lodestone",
+      "description": "Local research corpus over arXiv papers, blog posts, and code repos with paper-grounded MCP search/read tools",
+      "version": "0.1.0",
+      "author": {
+        "name": "piercelamb",
+        "url": "https://github.com/piercelamb"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/piercelamb/lodestone.git"
+      },
+      "category": "research",
+      "homepage": "https://github.com/piercelamb/lodestone",
+      "tags": ["mcp", "arxiv", "rag", "research", "knowledge-base"]
     }
   ]
 }
