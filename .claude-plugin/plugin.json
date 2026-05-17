@@ -1,6 +1,6 @@
 {
   "name": "deep-implement",
-  "description": "Implement code from /deep-plan sections with review and git workflow",
+  "description": "Implement code from /deep-plan sections with TDD, code review, and git workflow",
   "version": "0.2.1",
   "author": {
     "name": "piercelamb",
