@@ -113,6 +113,9 @@ CONTEXT_ITEM_KEYS = [
     "state_dir",
     "runtime",
     "test_command",
+    "github_enabled",
+    "github_issue",
+    "concern_ordering",
 ]
 
 

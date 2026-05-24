@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.11"
+# dependencies = []
+# ///
 """Capture session_id and plugin_root, expose via Claude's context.
 
 This hook runs when Claude Code starts a session. It reads session_id from

@@ -63,3 +63,24 @@ Next steps:
   - Create PR if ready
 ═══════════════════════════════════════════════════════════════
 ```
+
+### GitHub Summary (if enabled)
+
+If GitHub workflow was enabled, add a PR summary section:
+
+```
+Pull Requests:
+  PR #{N}: section-01-foundation — {url}
+  PR #{N}: section-02-models — {url}
+  PR #{N}: section-03-api — {url}
+  ...
+
+Tracking Issue: #{issue_number}
+```
+
+Read PR info from the session config (`github.section_prs` and `github.issue_number`).
+
+Replace "Create PR if ready" in next steps with:
+```
+  - Review open PRs and merge when ready
+```
