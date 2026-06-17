@@ -92,5 +92,12 @@ def sample_config():
         },
         "sections": ["section-01-foundation", "section-02-models"],
         "sections_state": {},
+        "github": {
+            "enabled": False,
+            "owner_repo": None,
+            "base_branch": None,
+            "issue_number": None,
+            "section_prs": {},
+        },
         "created_at": "2025-01-14T10:30:00Z"
     }

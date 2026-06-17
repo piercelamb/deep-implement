@@ -106,6 +106,16 @@ Would you like to:
   3. Stop implementation
 ```
 
+### 8.5. Guardrail Validation (Go projects)
+
+If the project runtime is `go`, run guardrail validation after tests pass. See [go-guardrails.md](go-guardrails.md) for the constraint rules.
+
+```bash
+uv run {plugin_root}/scripts/checks/validate_go_guardrails.py --target-dir "{target_dir}"
+```
+
+If violations are found: fix them (split files, extract helpers, fix imports), re-run tests, then re-validate. After 2 failed retries, proceed and let code review catch remaining issues.
+
 ## Next Steps
 
 After the implementation loop completes for a section:

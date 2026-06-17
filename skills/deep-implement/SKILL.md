@@ -142,6 +142,46 @@ AskUserQuestion:
 
 If user chooses "Exit", stop the workflow.
 
+**GitHub Integration (opt-in):**
+
+If the setup output has `github.available == true`:
+
+```
+AskUserQuestion:
+  question: "GitHub detected ({github.owner_repo}). Enable issue + PR workflow?"
+  options:
+    - label: "Yes — create tracking issue and PR per section"
+      description: "Creates a tracking issue and one PR per section for team review"
+    - label: "No — commit only (current behavior)"
+      description: "Commit to current branch, no push or PRs"
+```
+
+If user opts in:
+1. Store `base_branch` = current branch name (PRs will target this branch)
+2. Create a tracking issue with section checklist:
+   ```bash
+   gh issue create --title "deep-implement: {plan name}" --body "$(cat <<'EOF'
+   ## Implementation Tracking
+
+   Sections:
+   - [ ] section-01-name
+   - [ ] section-02-name
+   ...
+
+   Created by deep-implement.
+   EOF
+   )"
+   ```
+3. Parse issue number from output
+4. Store issue number via:
+   ```bash
+   uv run {plugin_root}/scripts/tools/update_github_state.py \
+       --state-dir "{state_dir}" \
+       --issue-number {N}
+   ```
+
+If GitHub is not available or user opts out, proceed with commit-only workflow (existing behavior).
+
 ### G. Handle Working Tree Status
 
 If `working_tree_clean == false`:
@@ -168,8 +208,10 @@ Working tree:   {Clean | Dirty (N files)}
 Pre-commit:     {Detected (type) | None}
                 {May modify files: Yes (formatters) | No | Unknown}
 Test command:   {test_command}
+GitHub:         {Enabled (issue #N) | Available (opted out) | Not available}
 Sections:       {N} detected
 Completed:      {M} already done
+Concern order:  {Enabled (K tagged) | Not enabled}
 State storage:  {state_dir}
 ═══════════════════════════════════════════════════════════════
 ```
@@ -209,7 +251,7 @@ Mark each task as `completed` when done: `TaskUpdate(taskId=X, status="completed
 
 ## Implementation Loop
 
-For each incomplete section (in manifest order):
+For each incomplete section (in execution order — concern order if enabled, otherwise manifest order):
 
 **Task milestone mapping:**
 | Task Subject | Workflow Steps |
@@ -234,9 +276,13 @@ Update task: `TaskUpdate(taskId=X, status="in_progress")`
 Read {sections_dir}/section-NN-<name>.md
 ```
 
+If the section file contains a `SECTION_META` block, note the concern type, target_files, and estimated_lines for use in guardrail validation and review context. See [concern-ordering.md](references/concern-ordering.md).
+
 ### Step 3: Implement Section
 
 See [implementation-loop.md](references/implementation-loop.md)
+
+**Go projects:** Read [go-guardrails.md](references/go-guardrails.md) for file size limits and architecture rules before writing code.
 
 Follow TDD workflow:
 1. Create skeleton files for imports
@@ -250,8 +296,23 @@ Follow TDD workflow:
 
 Maintain list of all files created during implementation.
 
+### Step 4.5: Guardrail Validation (Go projects)
+
+If runtime is `go`:
+1. Run `uv run {plugin_root}/scripts/checks/validate_go_guardrails.py --target-dir "{target_dir}"`
+2. If passed: continue to Step 5
+3. If failed: fix violations (split files, extract helpers, fix imports), re-run tests, re-validate
+4. After 2 failed retries: proceed anyway, let code reviewer flag issues
+
 ### Step 5: Stage Changes
 
+**If GitHub enabled:** Create a section branch before staging:
+```bash
+git checkout -b implement/{section-name}
+```
+(e.g., `implement/section-01-foundation`). If the branch already exists (resume), check it out instead.
+
+**Then stage changes (always):**
 ```bash
 # Stage new files
 git add {created_files...}
@@ -345,6 +406,54 @@ EOF
 )"
 ```
 
+### Step 10.5: Push and Create PR (GitHub only)
+
+**Skip this step if GitHub is not enabled.**
+
+See [pre-push-review.md](references/pre-push-review.md) and [github-workflow.md](references/github-workflow.md)
+
+1. **Pre-push review (optional):** Run the code-reviewer subagent against the full section diff as an aggregate quality check. If CRITICAL findings, ask user: fix / push anyway / stop.
+
+2. **Push the branch:**
+   ```bash
+   git push -u origin implement/{section-name}
+   ```
+
+3. **Create PR:**
+   ```bash
+   gh pr create --title "section-NN: {name}" --body "$(cat <<'EOF'
+   ## Summary
+   {Brief description from section plan}
+
+   Closes #{issue_number}
+   EOF
+   )" --base {base_branch}
+   ```
+
+4. **Store PR info:**
+   ```bash
+   uv run {plugin_root}/scripts/tools/update_github_state.py \
+       --state-dir "{state_dir}" \
+       --section "{section_name}" \
+       --pr-number {N} \
+       --pr-url "{url}"
+   ```
+
+5. **Update issue checkbox** (best-effort):
+   ```bash
+   # Fetch current body, check the section's checkbox, update
+   gh issue edit {issue_number} --body "$(updated body with [x] for this section)"
+   ```
+
+6. **Print PR URL** for the user.
+
+7. **Return to base branch:**
+   ```bash
+   git checkout {base_branch}
+   ```
+
+**Error handling:** If push or PR creation fails (network, permissions), print the error and continue. GitHub ops are best-effort — they never block implementation progress.
+
 ### Step 11: Update State
 
 After successful commit, update the session config:
@@ -357,6 +466,8 @@ uv run {plugin_root}/scripts/tools/update_section_state.py \
 ```
 
 This records the commit hash so the section is recognized as complete on resume.
+
+If GitHub is enabled and a PR was created, the PR URL is already stored via `update_github_state.py` in Step 10.5.
 
 ### Step 12: Mark Complete
 
@@ -404,6 +515,7 @@ After all sections complete, see [finalization.md](references/finalization.md):
 
 1. Generate `{state_dir}/usage.md` with usage guide for what was built
 2. Print completion summary with commits, files, and next steps
+3. If GitHub enabled: print summary table of all PRs with URLs and tracking issue link
 
 ---
 
@@ -464,6 +576,11 @@ Please review the section file.
 
 The setup script detects completed sections via `deep_implement_config.json` and marks their tasks complete. You'll resume from the next pending section with fresh instructions.
 
+**GitHub state on resume:** The config file stores `github.enabled`, `github.base_branch`, `github.issue_number`, and `github.section_prs`. On resume:
+- If GitHub was enabled, continue creating PRs for remaining sections
+- Check which sections already have PRs (skip push/PR for those)
+- Reuse the existing tracking issue
+
 **After compaction (if user chose "continue"):**
 
 1. Call `TaskList` to see current state
@@ -471,6 +588,8 @@ The setup script detects completed sections via `deep_implement_config.json` and
    - `plugin_root=...` - extract value after `=`
    - `sections_dir=...` - extract value after `=`
    - `state_dir=...` - extract value after `=`
+   - `github_enabled=...` - whether GitHub workflow is active
+   - `github_issue=...` - tracking issue number
 3. Find next pending, unblocked task
 4. Resume workflow from that task
 
@@ -486,3 +605,6 @@ The setup script detects completed sections via `deep_implement_config.json` and
 - [git-operations.md](references/git-operations.md) - Git handling
 - [pre-commit-handling.md](references/pre-commit-handling.md) - Hook handling
 - [finalization.md](references/finalization.md) - Usage guide and completion summary
+- [github-workflow.md](references/github-workflow.md) - GitHub integration (issue, branch, PR per section)
+- [pre-push-review.md](references/pre-push-review.md) - Pre-push aggregate code review
+- [concern-ordering.md](references/concern-ordering.md) - Concern-type execution ordering

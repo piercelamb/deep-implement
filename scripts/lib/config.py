@@ -59,6 +59,7 @@ def create_session_config(
     test_command: str = "uv run pytest",
     sections: list[str] | None = None,
     pre_commit: dict | None = None,
+    github: dict | None = None,
 ) -> dict:
     """
     Create a new session config with all required fields.
@@ -73,6 +74,7 @@ def create_session_config(
         test_command: Command to run tests
         sections: List of section names from manifest
         pre_commit: Pre-commit hook configuration dict
+        github: GitHub integration configuration dict
 
     Returns:
         New config dict
@@ -92,6 +94,13 @@ def create_session_config(
             "type": "none",
             "may_modify_files": False,
             "detected_formatters": []
+        },
+        "github": github or {
+            "enabled": False,
+            "owner_repo": None,
+            "base_branch": None,
+            "issue_number": None,
+            "section_prs": {},
         },
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
