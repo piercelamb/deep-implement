@@ -121,7 +121,7 @@ class TestClaudeEnvFileFallback:
 
         # Should also write to env file
         content = env_file.read_text()
-        assert "export DEEP_SESSION_ID=test-session-456" in content
+        assert 'export DEEP_SESSION_ID="test-session-456"' in content
 
     def test_writes_transcript_path_to_env_file(self, tmp_path):
         """Should write transcript_path to CLAUDE_ENV_FILE."""
@@ -138,13 +138,13 @@ class TestClaudeEnvFileFallback:
 
         assert returncode == 0
         content = env_file.read_text()
-        assert "export DEEP_SESSION_ID=test-session-789" in content
-        assert "export CLAUDE_TRANSCRIPT_PATH=/path/to/transcript.jsonl" in content
+        assert 'export DEEP_SESSION_ID="test-session-789"' in content
+        assert 'export CLAUDE_TRANSCRIPT_PATH="/path/to/transcript.jsonl"' in content
 
     def test_does_not_duplicate_existing_entries(self, tmp_path):
         """Should not duplicate entries already in CLAUDE_ENV_FILE."""
         env_file = tmp_path / "env_file.sh"
-        env_file.write_text("export DEEP_SESSION_ID=test-session-111\n")
+        env_file.write_text('export DEEP_SESSION_ID="test-session-111"\n')
 
         payload = {"session_id": "test-session-111"}
         returncode, _, _ = run_hook(
@@ -154,7 +154,7 @@ class TestClaudeEnvFileFallback:
         assert returncode == 0
         content = env_file.read_text()
         # Should only appear once
-        assert content.count("DEEP_SESSION_ID=test-session-111") == 1
+        assert content.count('DEEP_SESSION_ID="test-session-111"') == 1
 
     def test_succeeds_when_claude_env_file_not_set(self):
         """Should succeed even when CLAUDE_ENV_FILE is not set."""
@@ -241,3 +241,21 @@ class TestDeepSessionIdConditional:
         assert returncode == 0
         output = json.loads(stdout)
         assert output["hookSpecificOutput"]["additionalContext"] == "DEEP_SESSION_ID=test-session-789"
+
+
+class TestShellQuoting:
+    """Tests for shell quoting: export values should be double-quoted."""
+
+    def test_values_with_spaces_are_correctly_quoted(self, tmp_path):
+        """Values containing spaces should be correctly quoted."""
+        env_file = tmp_path / "env_file.sh"
+        env_file.touch()
+
+        payload = {
+            "session_id": "test-session-456",
+            "transcript_path": "/path/with spaces/transcript.jsonl",
+        }
+        run_hook(json.dumps(payload), env={"CLAUDE_ENV_FILE": str(env_file)})
+
+        content = env_file.read_text()
+        assert 'export CLAUDE_TRANSCRIPT_PATH="/path/with spaces/transcript.jsonl"' in content

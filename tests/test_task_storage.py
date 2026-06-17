@@ -256,3 +256,40 @@ class TestGetTasksDir:
         result = get_tasks_dir("my-session-id")
 
         assert result == Path("/Users/test/.claude/tasks/my-session-id")
+
+
+class TestTaskStatusConsolidation:
+    """Tests for TaskStatus consolidation — should be defined only in task_storage."""
+
+    def test_task_storage_exports_task_status(self):
+        """TaskStatus should be importable from task_storage."""
+        from scripts.lib.task_storage import TaskStatus
+        assert hasattr(TaskStatus, "PENDING")
+        assert hasattr(TaskStatus, "IN_PROGRESS")
+        assert hasattr(TaskStatus, "COMPLETED")
+
+    def test_impl_tasks_imports_task_status(self):
+        """TaskStatus should be importable from impl_tasks (via re-export or import)."""
+        from scripts.lib.impl_tasks import TaskStatus
+        assert hasattr(TaskStatus, "PENDING")
+
+    def test_impl_tasks_no_local_task_status_class(self):
+        """impl_tasks module should NOT define TaskStatus class body (only imports it)."""
+        source_path = Path(__file__).parent.parent / "scripts" / "lib" / "impl_tasks.py"
+        source = source_path.read_text()
+        assert "class TaskStatus" not in source, (
+            "impl_tasks.py still defines TaskStatus locally — "
+            "it should import from task_storage instead"
+        )
+
+    def test_no_circular_import(self):
+        """task_storage should NOT import from impl_tasks (no circular dependency)."""
+        source_path = Path(__file__).parent.parent / "scripts" / "lib" / "task_storage.py"
+        source = source_path.read_text()
+        for line in source.splitlines():
+            stripped = line.strip()
+            if stripped.startswith("#"):
+                continue
+            assert "import" not in stripped or "impl_tasks" not in stripped, (
+                f"task_storage.py imports from impl_tasks: {stripped}"
+            )

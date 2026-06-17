@@ -6,15 +6,8 @@ and written directly to the task storage.
 """
 
 from dataclasses import dataclass
-from enum import StrEnum
 
-
-class TaskStatus(StrEnum):
-    """Status values for tasks."""
-
-    PENDING = "pending"
-    IN_PROGRESS = "in_progress"
-    COMPLETED = "completed"
+from scripts.lib.task_storage import TaskStatus
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

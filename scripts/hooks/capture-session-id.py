@@ -87,14 +87,14 @@ def main() -> int:
                 pass
 
             lines_to_write = []
-            if f"DEEP_SESSION_ID={session_id}" not in existing_content:
-                lines_to_write.append(f"export DEEP_SESSION_ID={session_id}\n")
+            if f'DEEP_SESSION_ID="{session_id}"' not in existing_content:
+                lines_to_write.append(f'export DEEP_SESSION_ID="{session_id}"\n')
             if (
                 transcript_path
-                and f"CLAUDE_TRANSCRIPT_PATH={transcript_path}" not in existing_content
+                and f'CLAUDE_TRANSCRIPT_PATH="{transcript_path}"' not in existing_content
             ):
                 lines_to_write.append(
-                    f"export CLAUDE_TRANSCRIPT_PATH={transcript_path}\n"
+                    f'export CLAUDE_TRANSCRIPT_PATH="{transcript_path}"\n'
                 )
 
             if lines_to_write:

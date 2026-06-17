@@ -224,10 +224,10 @@ def check_working_tree_status(git_root: Path) -> dict:
                     # Fallback: just strip the status chars
                     dirty_files.append(line[3:].strip())
             return {"clean": len(dirty_files) == 0, "dirty_files": dirty_files}
-    except Exception:
-        pass
-
-    return {"clean": True, "dirty_files": []}
+        else:
+            return {"clean": False, "dirty_files": [], "error": result.stderr.strip()}
+    except FileNotFoundError:
+        return {"clean": False, "dirty_files": [], "error": "git not found"}
 
 
 def detect_commit_style(git_root: Path) -> str:
